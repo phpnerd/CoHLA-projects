@@ -1,0 +1,45 @@
+group 'RoomThermostat'
+version '0.1'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: "de.dynamicfiles.projects.gradle.plugins", name:"javafx-gradle-plugin", version:"8.8.2"
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile group: 'org.openjfx', name: 'javafx-base', version: '11-ea+23'
+    compile group: 'org.openjfx', name: 'javafx-controls', version: '11-ea+23'
+    compile group: 'org.openjfx', name: 'javafx-graphics', version: '11-ea+23'
+    compile group: "com.airhacks", name: "afterburner.fx", version: "1.7.0"
+    compile project(':RoomThermostatHLAImplementation')
+}
+
+apply plugin: 'javafx-gradle-plugin'
+
+sourceSets.main {
+    resources {
+        srcDirs = ["src/main/resources", "src/main/java"]
+        include "**/*.fxml"
+        include "**/*.css"
+        include "**/*.properties"
+        include "**/*.xml"
+    }
+}
+
+jfx {
+    mainClass = "nl.ru.sws.hla.examples.roomthermostat.thermostatgui.FXMain"
+}
+
+mainClassName = "nl.ru.sws.hla.examples.roomthermostat.thermostatgui.FXMain"

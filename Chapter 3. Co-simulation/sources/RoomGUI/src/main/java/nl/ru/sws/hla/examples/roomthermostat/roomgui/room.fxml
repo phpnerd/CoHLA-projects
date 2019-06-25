@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.ru.sws.hla.examples.roomthermostat.roomgui.RoomPresenter">
+    <children>
+        <BorderPane prefHeight="800.0" prefWidth="1700.0">
+            <top>
+                <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <items>
+                        <Button fx:id="btnStart" mnemonicParsing="false" onAction="#startButtonPressed" text="Start" />
+                        <Button fx:id="btnStop" mnemonicParsing="false" onAction="#stopButtonPressed" text="Stop" />
+                        <Button fx:id="btnStep" mnemonicParsing="false" onAction="#stepButtonPressed" text="Step" />
+                        <TextField fx:id="txtStepSize" prefHeight="26.0" prefWidth="70.0" text="1.0" />
+                        <Label text="current time:" />
+                        <TextField fx:id="txtCurrentTime" editable="false" prefHeight="26.0" prefWidth="150.0" text="0" />
+                    </items>
+                </ToolBar>
+            </top>
+            <center>
+                <AnchorPane>
+                    <children>
+                        <LineChart fx:id="tempChart" disable="true" legendVisible="false" prefHeight="760.0" prefWidth="1680.0">
+                            <xAxis>
+                                <NumberAxis side="BOTTOM" />
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis side="LEFT"  />
+                            </yAxis>
+                        </LineChart>
+                    </children>
+                </AnchorPane>
+            </center>
+        </BorderPane>
+    </children>
+</Pane>

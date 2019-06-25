@@ -1,0 +1,8 @@
+rootProject.name = 'RoomThermostat'
+include 'HLAModule'
+include 'RoomThermostatHLAImplementation'
+include 'RoomFMIWrapper'
+include 'POOSLHLAModule'
+include 'ThermostatPOOSLWrapper'
+include 'RoomGUI'
+include 'ThermostatGUI'

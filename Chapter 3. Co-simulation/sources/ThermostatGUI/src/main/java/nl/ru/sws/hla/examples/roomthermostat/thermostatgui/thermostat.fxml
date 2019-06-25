@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nl.ru.sws.hla.examples.roomthermostat.thermostatgui.ThermostatPresenter">
+    <children>
+        <AnchorPane prefHeight="250.0" prefWidth="400.0">
+            <children>
+                <Label layoutX="20.0" layoutY="20.0" text="Temperature: " />
+                <Label fx:id="lblTemperature" layoutX="170.0" layoutY="20.0" text="18.0" />
+                <Label layoutX="20.0" layoutY="50.0" text="Target temperature: " />
+                <Label fx:id="lblTarget" layoutX="170.0" layoutY="50.0" text="18.0" />
+                <Line endX="385.0" endY="80.0" startX="15.0" startY="80.0" />
+                <Button fx:id="btnDecreaseTarget" layoutX="20.0" layoutY="100.0" onAction="#decreaseTargetButtonPressed" text="Decrease target" />
+                <Button fx:id="btnIncreaseTarget" layoutX="170.0" layoutY="100.0" onAction="#increaseTargetButtonPressed" text="Increase target" />
+                <Circle fx:id="crcHeaterState" fill="blue" layoutX="250.0" layoutY="43.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+            </children>
+        </AnchorPane>
+    </children>
+</Pane>

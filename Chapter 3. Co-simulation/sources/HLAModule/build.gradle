@@ -1,0 +1,19 @@
+group 'RoomThermostat'
+version '0.1'
+
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile name: "portico"
+    compile name: "fmu-framework-2.4.3"
+    compile name: "fmu-wrapper-2.18.7"
+    compile group: 'org.simpleframework', name: 'simple-xml', version: '2.7.1'
+    compile group: 'com.sun.jna', name: 'jna', version: '3.0.9'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.5'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.5'
+}

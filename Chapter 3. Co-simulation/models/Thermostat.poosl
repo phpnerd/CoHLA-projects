@@ -1,0 +1,94 @@
+import "HLAConnector.poosl"
+
+process class Thermostat(
+	initTarget : Real,
+	initTemperature : Real,
+	initHeaterState : Boolean,
+	period : Integer,
+	stepSize : Real)
+ports
+	port
+messages
+	port?timeAdvanceGrant(Integer)
+	port!timeAdvanceRequest(Integer)
+	port?read(String)
+	port!read(String, Object)
+	port?write(String, Object)
+	port?interact(String, Array)
+	port!interact(String, Array)
+variables
+	block : Boolean
+	attr : HLAAttributes
+init
+	init()()
+methods
+	init()()
+		block := false;
+		attr := new(HLAAttributes);
+		attr write("targetTemperature", initTarget);
+		attr write("temperature", initTemperature);
+		attr write("heaterState", initHeaterState);
+		delay 1;
+		par
+			cycle()()
+		and
+			interact()()
+		and
+			attributes()()
+		rap
+	cycle()() | time : Integer |
+		port!timeAdvanceRequest(period);
+		port?timeAdvanceGrant(time);
+//		BEGIN PRESET
+//		if (time asReal > (2700.0 - (period asReal / 2.0))) & (time asReal <= (2700.0 + (period asReal / 2.0))) then
+//			attr write("targetTemperature", 20.0)
+//		fi;
+//		if (time asReal > (9900.0 - (period asReal / 2.0))) & (time asReal <= (9900.0 + (period asReal / 2.0))) then
+//			attr write("targetTemperature", 18.5)
+//		fi;
+//		if (time asReal > (13500.0 - (period asReal / 2.0))) & (time asReal <= (13500.0 + (period asReal / 2.0))) then
+//			attr write("targetTemperature", 18.0)
+//		fi;
+//		END PRESET
+		delay period;
+		block := true;
+		port!interact("RequestTemperature", nil);
+		[!block]
+		if (attr read("temperature") < (attr read("targetTemperature") * 0.985)) & !(attr read("heaterState")) then
+			attr write("heaterState", true);
+			port!interact("TurnHeaterOn", nil)
+		else if (attr read("temperature") > (attr read("targetTemperature") * 1.015)) & attr read("heaterState") then
+			attr write("heaterState", false);
+			port!interact("TurnHeaterOff", nil)
+		fi fi;
+		cycle()()
+	interact()() | name : String, parameters : Array |
+		port?interact(name, parameters);
+		sel
+			[name = "TargetTemperatureDown"]
+			attr write("targetTemperature", attr read("targetTemperature") - stepSize)
+		or
+			[name = "TargetTemperatureUp"]
+			attr write("targetTemperature", attr read("targetTemperature") + stepSize)
+		or
+			[name = "ProvideTemperature"]
+			attr write("temperature", parameters at(1));
+			block := false
+		les;
+		interact()()
+	attributes()() | name : String, value : Object |
+		sel
+			port?read(name);
+			port!read(name, attr read(name))
+		or
+			port?write(name, value);
+			attr write(name, value)
+		les;
+		attributes()()
+		
+system
+instances
+	thermostat : Thermostat(initTarget := 18.0, initTemperature := 18.0, initHeaterState := false, stepSize := 0.5, period := 30)
+	hlaConnector : HLAConnector(port := 9999)
+channels
+	{ thermostat.port, hlaConnector.fedPort }

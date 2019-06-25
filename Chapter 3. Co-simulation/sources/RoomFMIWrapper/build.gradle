@@ -1,0 +1,16 @@
+group 'RoomThermostat'
+version '0.1'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile project(':RoomThermostatHLAImplementation')
+}
+
+mainClassName = "nl.ru.sws.hla.examples.roomthermostat.roomfmiwrapper.RoomFMIWrapper"
