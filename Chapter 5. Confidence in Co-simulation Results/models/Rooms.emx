@@ -1,0 +1,1773 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document>
+ <Model version="4.6" build="4.6.4.8004">
+  <Sidops><![CDATA[model 128 184
+ description '<Information>
+ <Description>
+    <Version>4.6</Version>
+<IsMainModel>0</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>D:\Documents\Work\RU\workspaces\Models\RoomThermostat\Rooms.emx</LibraryPath>
+  <TimeStamp>2019-4-19 11:38:02</TimeStamp>
+</Description>
+</Information>';
+ type Mainmodel
+ end;
+ implementation bg
+  submodels
+   Constant 56 496
+    description '<Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Sources\Constant.emx</LibraryPath>
+  <TimeStamp>2007-10-19 14:48:44</TimeStamp>
+</Description>';
+    type Constant
+     ports
+      signal out output;
+    end;
+    icon bg bottom
+     figures
+      rectangle 40.1 480 71.9 512 color 0 fill 15132390;
+      line 44.9 491.6 66.9 491.6 color 16711680 width 2;
+      line 42.2 502.7 67.9 502.7 color 0;
+      line 44.5 486.7 44.5 505 color 0;
+    end;
+    implementation eq
+parameters
+	real C = 18;		// output value
+equations
+	output = C;
+     implementation_end;
+   Hold 272 496
+    description '<Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Discrete\Hold.emx</LibraryPath>
+  <TimeStamp>2007-9-27 15:20:15</TimeStamp>
+</Description>';
+    type Hold
+     ports
+      signal in input;
+      signal out output;
+    end;
+    icon bg bottom
+     figures
+      rectangle 256 480 288 512 color 0 fill 15132390;
+      text 'ZOH' 273.1 494.9 color 16711680 14;
+    end;
+    implementation eq
+parameters
+	real initial = 1;
+equations
+	output = hold (input, initial);
+         implementation_end;
+   LargeRoom 416 496
+    description '<Information><Description><Version>4.6</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+    type Submodel
+     ports
+      signal boolean in heaterState;
+      signal out temperature;
+    end;
+    implementation bg
+     submodels
+      Constant1 232 488
+       description '<Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Sources\Constant.emx</LibraryPath>
+  <TimeStamp>2007-10-19 14:48:44</TimeStamp>
+</Description>';
+       type Constant
+        ports
+         signal out output;
+       end;
+       icon bg bottom
+        figures
+         rectangle 216.1 472 247.9 504 color 0 fill 15132390;
+         line 220.9 483.6 242.9 483.6 color 16711680 width 2;
+         line 218.2 494.7 243.9 494.7 color 0;
+         line 220.5 478.7 220.5 497 color 0;
+       end;
+       implementation eq
+parameters
+	real C = 273.0;		// output value
+equations
+	output = C;
+     implementation_end;
+      Gain 184 344
+       description '<Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Block Diagram\Gain.emx</LibraryPath>
+  <TimeStamp>2007-9-26 12:15:12</TimeStamp>
+</Description>';
+       type Gain
+        ports
+         signal in input;
+         signal out output;
+       end;
+       icon bg bottom
+        figures
+         rectangle 168.1 328 199.9 360 color 0 fill 15132390;
+         text 'K' 184 344 color 16711680 16 bold;
+       end;
+       implementation eq
+parameters
+	real K = 47;		// gain
+equations
+	output = K * input;
+    implementation_end;
+      Heater 280 344
+       description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\MSe.emx</LibraryPath><TimeStamp>2011-11-29 16:12:33</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type MSe
+        ports
+         thermal out p;
+         signal in effort;
+        restrictions
+         causality fixed out p;
+       end;
+       icon bg bottom
+        figures
+         text 'MSe' 280 344 color 0 18 bold;
+       end;
+       implementation eq
+variables
+	real flow;
+equations
+	p.e = effort;
+	flow = p.f;
+implementation_end;
+      plug heaterState 104 337.3;
+      plug temperature 408 471;
+      OneJunction 344 344
+       description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:17:51</TimeStamp>
+</Description>
+</Information>';
+       knot OneJunction
+        ports
+         thermal knot duplicatable none p [1];
+         signal knot out flow [1];
+        restrictions
+         causality constraint one_out p;
+       end;
+       icon bg
+        figures
+         text '1' 344 344 color 0 18 bold;
+       end;
+       implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+      OneJunction1 504 344
+       description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:17:51</TimeStamp>
+</Description>
+</Information>';
+       knot OneJunction
+        ports
+         thermal knot duplicatable none p [1];
+         signal knot out flow [1];
+        restrictions
+         causality constraint one_out p;
+       end;
+       icon bg
+        figures
+         text '1' 504 344 color 0 18 bold;
+       end;
+       implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+      PlusMinus1 232 344
+       description '<Description><Version>4.0</Version><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Block Diagram\PlusMinus.emx</LibraryPath>
+  <TimeStamp>2007-9-27 10:15:13</TimeStamp>
+</Description>';
+       knot PlusMinus
+        ports
+         signal knot duplicatable in plus [1];
+         signal knot duplicatable in minus [1];
+         signal knot out output [1];
+       end;
+       icon bg ellipse
+        figures
+         ellipse 224 336 240 352 color 0 fill 16777215;
+       end;
+       implementation eq
+equations
+    output = sum (collect (plus)) - sum (collect (minus));
+    implementation_end;
+      PlusMinus2 408 424
+       description '<Description><Version>4.0</Version><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Block Diagram\PlusMinus.emx</LibraryPath>
+  <TimeStamp>2007-9-27 10:15:13</TimeStamp>
+</Description>';
+       knot PlusMinus
+        ports
+         signal knot duplicatable in plus [1];
+         signal knot duplicatable in minus [1];
+         signal knot out output [1];
+       end;
+       icon bg ellipse
+        figures
+         ellipse 400 416 416 432 color 0 fill 16777215;
+       end;
+       implementation eq
+equations
+    output = sum (collect (plus)) - sum (collect (minus));
+    implementation_end;
+      radiator 344 288
+       description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\R.emx</LibraryPath><TimeStamp>2011-11-29 16:35:37</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type R
+        ports
+         power in p;
+       end;
+       icon bg bottom
+        figures
+         text 'R' 344 288 color 0 18 bold;
+       end;
+       implementation eq
+parameters
+	real A = 1.0 {m2};
+	real r = 40;
+equations
+	p.e = 1/(A*r) * p.f;
+
+implementation_end;
+      Roomcapacity 408 288
+       description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\C.emx</LibraryPath><TimeStamp>2011-11-29 15:58:35</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type C
+        ports
+         power in p;
+         signal out state;
+        restrictions
+         causality preferred out p;
+       end;
+       icon bg bottom
+        figures
+         text 'C' 408 288 color 0 18 bold;
+       end;
+       implementation eq
+parameters
+	real surface = 100.0 {m2};
+	real height = 2.5 {m2};
+	real c = 1210;
+	real initialtemp = 291;
+variables
+	real initial;
+initialequations
+	initial = initialtemp*(c*surface*height);
+equations
+	state = int(p.f,initial);
+	p.e = state / (c*surface*height);
+implementation_end;
+      Se 560 344
+       description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\Se.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:36:49</TimeStamp>
+</Description>
+</Information>';
+       type Se
+        ports
+         power out p;
+        restrictions
+         causality fixed out p;
+       end;
+       icon bg bottom
+        figures
+         text 'Se' 560 344 color 0 18 bold;
+       end;
+       implementation eq
+parameters
+	real effort = 278;
+variables
+	real flow;
+equations
+	p.e = effort;
+	flow = p.f;
+implementation_end;
+      Splitter1 232 424
+       description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+       knot Splitter
+        ports
+         signal knot duplicatable out output [1];
+         signal knot in input [1];
+       end;
+       icon bg ellipse
+        figures
+         ellipse 228.8 420.8 235.2 427.2 color -1 fill 0;
+         ellipse 227.7 419.7 236.3 428.3 color -1;
+        terminals
+         input 232 424 fixed;
+       end;
+       implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+      window 504 288
+       description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\R.emx</LibraryPath><TimeStamp>2011-11-29 16:35:37</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type R
+        ports
+         power in p;
+       end;
+       icon bg bottom
+        figures
+         text 'R' 504 288 color 0 18 bold;
+       end;
+       implementation eq
+parameters
+	real A = 10.5 {m2};
+	real r = 0.35 {K/m2W};
+equations
+	p.e = r/(A) * p.f;
+implementation_end;
+      ZeroJunction 408 344
+       description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\ZeroJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:45:16</TimeStamp>
+</Description>
+</Information>';
+       knot ZeroJunction
+        ports
+         thermal knot duplicatable none p [1];
+         signal knot out effort [1];
+        restrictions
+         causality constraint one_in p;
+       end;
+       icon bg
+        figures
+         text '0' 408 344 color 0 18 bold;
+       end;
+       implementation eq
+equations
+	sum (direct (p.f)) = 0;
+	equal (collect (p.e));
+	effort = first (p.e);
+implementation_end;
+     end;
+     connections
+      Constant1\output -> Splitter1\input;
+      Gain\output -> PlusMinus1\plus;
+      Heater\p => OneJunction\p;
+      heaterState -> Gain\input;
+      OneJunction\p => radiator\p;
+      OneJunction\p => ZeroJunction\p;
+      OneJunction1\p <= Se\p;
+      OneJunction1\p => window\p;
+      OneJunction1\p => ZeroJunction\p;
+      PlusMinus1\output -> Heater\effort;
+      PlusMinus2\output -> temperature;
+      PlusMinus2\plus <- ZeroJunction\effort;
+      Splitter1\output -> PlusMinus1\plus;
+      Splitter1\output -> PlusMinus2\minus 408 416;
+      ZeroJunction\p => Roomcapacity\p;
+     end;
+    implementation_end;
+   LargeRoomOut 560 496
+    description '<Information><Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Signal\Block Diagram\SignalMonitor.emx</LibraryPath><TimeStamp>2007-9-26 12:14:4</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+    type SignalMonitor
+     ports
+      signal in input;
+    end;
+    icon bg bottom
+     figures
+      rectangle 544 480 576 512 color 0 fill 15132390;
+      rectangle 549.7 485.8 570.3 506.6 color 16711680 fill 11776947 width 2;
+      rectangle 551.8 488.4 567.9 504 color -1 fill 16777215;
+      line 553.9 490.7 553.9 502 color 0 fill 16777215;
+      line 552 500.4 564.5 500.4 color 0 fill 16777215;
+      line 553.5 500.1 566.4 493.7 color 255 fill 16777215;
+    end;
+    implementation eq
+variables
+	real interesting plot;
+equations
+	plot = input;
+   implementation_end;
+   MediumRoom 416 416
+    description '<Information><Description><Version>4.6</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+    type Submodel
+     ports
+      signal boolean in heaterState;
+      signal out temperature;
+    end;
+    implementation bg
+     submodels
+      Constant1 232 488
+       description '<Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Sources\Constant.emx</LibraryPath>
+  <TimeStamp>2007-10-19 14:48:44</TimeStamp>
+</Description>';
+       type Constant
+        ports
+         signal out output;
+       end;
+       icon bg bottom
+        figures
+         rectangle 216.1 472 247.9 504 color 0 fill 15132390;
+         line 220.9 483.6 242.9 483.6 color 16711680 width 2;
+         line 218.2 494.7 243.9 494.7 color 0;
+         line 220.5 478.7 220.5 497 color 0;
+       end;
+       implementation eq
+parameters
+	real C = 273.0;		// output value
+equations
+	output = C;
+     implementation_end;
+      Gain 184 344
+       description '<Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Block Diagram\Gain.emx</LibraryPath>
+  <TimeStamp>2007-9-26 12:15:12</TimeStamp>
+</Description>';
+       type Gain
+        ports
+         signal in input;
+         signal out output;
+       end;
+       icon bg bottom
+        figures
+         rectangle 168.1 328 199.9 360 color 0 fill 15132390;
+         text 'K' 184 344 color 16711680 16 bold;
+       end;
+       implementation eq
+parameters
+	real K = 47;		// gain
+equations
+	output = K * input;
+    implementation_end;
+      Heater 280 344
+       description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\MSe.emx</LibraryPath><TimeStamp>2011-11-29 16:12:33</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type MSe
+        ports
+         thermal out p;
+         signal in effort;
+        restrictions
+         causality fixed out p;
+       end;
+       icon bg bottom
+        figures
+         text 'MSe' 280 344 color 0 18 bold;
+       end;
+       implementation eq
+variables
+	real flow;
+equations
+	p.e = effort;
+	flow = p.f;
+implementation_end;
+      plug heaterState 105 337.3;
+      plug temperature 408.1 471;
+      OneJunction 344 344
+       description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:17:51</TimeStamp>
+</Description>
+</Information>';
+       knot OneJunction
+        ports
+         thermal knot duplicatable none p [1];
+         signal knot out flow [1];
+        restrictions
+         causality constraint one_out p;
+       end;
+       icon bg
+        figures
+         text '1' 344 344 color 0 18 bold;
+       end;
+       implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+      OneJunction1 504 344
+       description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:17:51</TimeStamp>
+</Description>
+</Information>';
+       knot OneJunction
+        ports
+         thermal knot duplicatable none p [1];
+         signal knot out flow [1];
+        restrictions
+         causality constraint one_out p;
+       end;
+       icon bg
+        figures
+         text '1' 504 344 color 0 18 bold;
+       end;
+       implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+      PlusMinus1 232 344
+       description '<Description><Version>4.0</Version><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Block Diagram\PlusMinus.emx</LibraryPath>
+  <TimeStamp>2007-9-27 10:15:13</TimeStamp>
+</Description>';
+       knot PlusMinus
+        ports
+         signal knot duplicatable in plus [1];
+         signal knot duplicatable in minus [1];
+         signal knot out output [1];
+       end;
+       icon bg ellipse
+        figures
+         ellipse 224 336 240 352 color 0 fill 16777215;
+       end;
+       implementation eq
+equations
+    output = sum (collect (plus)) - sum (collect (minus));
+    implementation_end;
+      PlusMinus2 408 424
+       description '<Description><Version>4.0</Version><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Block Diagram\PlusMinus.emx</LibraryPath>
+  <TimeStamp>2007-9-27 10:15:13</TimeStamp>
+</Description>';
+       knot PlusMinus
+        ports
+         signal knot duplicatable in plus [1];
+         signal knot duplicatable in minus [1];
+         signal knot out output [1];
+       end;
+       icon bg ellipse
+        figures
+         ellipse 400 416 416 432 color 0 fill 16777215;
+       end;
+       implementation eq
+equations
+    output = sum (collect (plus)) - sum (collect (minus));
+    implementation_end;
+      radiator 344 288
+       description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\R.emx</LibraryPath><TimeStamp>2011-11-29 16:35:37</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type R
+        ports
+         power in p;
+       end;
+       icon bg bottom
+        figures
+         text 'R' 344 288 color 0 18 bold;
+       end;
+       implementation eq
+parameters
+	real A = 0.5 {m2};
+	real r = 40;
+equations
+	p.e = 1/(A*r) * p.f;
+
+implementation_end;
+      Roomcapacity 408 288
+       description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\C.emx</LibraryPath><TimeStamp>2011-11-29 15:58:35</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type C
+        ports
+         power in p;
+         signal out state;
+        restrictions
+         causality preferred out p;
+       end;
+       icon bg bottom
+        figures
+         text 'C' 408 288 color 0 18 bold;
+       end;
+       implementation eq
+parameters
+	real surface = 34.0 {m2};
+	real height = 2.5 {m2};
+	real c = 1210;
+	real initialtemp = 291;
+variables
+	real initial;
+initialequations
+	initial = initialtemp*(c*surface*height);
+equations
+	state = int(p.f,initial);
+	p.e = state / (c*surface*height);
+implementation_end;
+      Se 560 344
+       description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\Se.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:36:49</TimeStamp>
+</Description>
+</Information>';
+       type Se
+        ports
+         power out p;
+        restrictions
+         causality fixed out p;
+       end;
+       icon bg bottom
+        figures
+         text 'Se' 560 344 color 0 18 bold;
+       end;
+       implementation eq
+parameters
+	real effort = 278;
+variables
+	real flow;
+equations
+	p.e = effort;
+	flow = p.f;
+implementation_end;
+      Splitter1 232 424
+       description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+       knot Splitter
+        ports
+         signal knot duplicatable out output [1];
+         signal knot in input [1];
+       end;
+       icon bg ellipse
+        figures
+         ellipse 228.8 420.8 235.2 427.2 color -1 fill 0;
+         ellipse 227.7 419.7 236.3 428.3 color -1;
+        terminals
+         input 232 424 fixed;
+       end;
+       implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+      window 504 288
+       description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\R.emx</LibraryPath><TimeStamp>2011-11-29 16:35:37</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type R
+        ports
+         power in p;
+       end;
+       icon bg bottom
+        figures
+         text 'R' 504 288 color 0 18 bold;
+       end;
+       implementation eq
+parameters
+	real A = 4.0 {m2};
+	real r = 0.35 {K/m2W};
+equations
+	p.e = r/(A) * p.f;
+implementation_end;
+      ZeroJunction 408 344
+       description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\ZeroJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:45:16</TimeStamp>
+</Description>
+</Information>';
+       knot ZeroJunction
+        ports
+         thermal knot duplicatable none p [1];
+         signal knot out effort [1];
+        restrictions
+         causality constraint one_in p;
+       end;
+       icon bg
+        figures
+         text '0' 408 344 color 0 18 bold;
+       end;
+       implementation eq
+equations
+	sum (direct (p.f)) = 0;
+	equal (collect (p.e));
+	effort = first (p.e);
+implementation_end;
+     end;
+     connections
+      Constant1\output -> Splitter1\input;
+      Gain\output -> PlusMinus1\plus;
+      Heater\p => OneJunction\p;
+      heaterState -> Gain\input;
+      OneJunction\p => radiator\p;
+      OneJunction\p => ZeroJunction\p;
+      OneJunction1\p <= Se\p;
+      OneJunction1\p => window\p;
+      OneJunction1\p => ZeroJunction\p;
+      PlusMinus1\output -> Heater\effort;
+      PlusMinus2\output -> temperature;
+      PlusMinus2\plus <- ZeroJunction\effort;
+      Splitter1\output -> PlusMinus1\plus;
+      Splitter1\output -> PlusMinus2\minus 408 416;
+      ZeroJunction\p => Roomcapacity\p;
+     end;
+    implementation_end;
+   MediumRoomOut 560 416
+    description '<Information><Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Signal\Block Diagram\SignalMonitor.emx</LibraryPath><TimeStamp>2007-9-26 12:14:4</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+    type SignalMonitor
+     ports
+      signal in input;
+    end;
+    icon bg bottom
+     figures
+      rectangle 544 400 576 432 color 0 fill 15132390;
+      rectangle 549.7 405.8 570.3 426.6 color 16711680 fill 11776947 width 2;
+      rectangle 551.8 408.4 567.9 424 color -1 fill 16777215;
+      line 553.9 410.7 553.9 422 color 0 fill 16777215;
+      line 552 420.4 564.5 420.4 color 0 fill 16777215;
+      line 553.5 420.1 566.4 413.7 color 255 fill 16777215;
+    end;
+    implementation eq
+variables
+	real interesting plot;
+equations
+	plot = input;
+   implementation_end;
+   Sample 336 576
+    description '<Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Discrete\Sample.emx</LibraryPath>
+  <TimeStamp>2007-9-27 15:20:31</TimeStamp>
+</Description>';
+    type Sample
+     ports
+      signal in input;
+      signal out output;
+    end;
+    icon bg bottom
+     figures
+      rectangle 320 560 352 592 color 0 fill 15132390;
+      line 322.3 566.8 325.2 566.8 325.2 562.9 329.3 562.9 329.3 566.8 333.2 566.8 333.2 562.9 335.1 562.9 color 16711680 fill 15132390;
+      line 335.5 568.4 337.7 568.4 337.7 574.4 338.6 572.9 color 0 fill 15132390;
+      line 337 573.1 337.7 574.4 color 0 fill 15132390;
+      line 323.9 579.9 331.9 579.9 344 576 color 0 fill 15132390 width 2;
+    end;
+    implementation eq
+equations
+	output = sample (input);
+      implementation_end;
+   SmallRoom 415.9 336
+    description '<Information><Description><Version>4.6</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+    type Submodel
+     ports
+      signal boolean in heaterState;
+      signal out temperature;
+    end;
+    implementation bg
+     submodels
+      Constant1 232 488
+       description '<Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Sources\Constant.emx</LibraryPath>
+  <TimeStamp>2007-10-19 14:48:44</TimeStamp>
+</Description>';
+       type Constant
+        ports
+         signal out output;
+       end;
+       icon bg bottom
+        figures
+         rectangle 216.1 472 247.9 504 color 0 fill 15132390;
+         line 220.9 483.6 242.9 483.6 color 16711680 width 2;
+         line 218.2 494.7 243.9 494.7 color 0;
+         line 220.5 478.7 220.5 497 color 0;
+       end;
+       implementation eq
+parameters
+	real C = 273.0;		// output value
+equations
+	output = C;
+     implementation_end;
+      Gain 184 344
+       description '<Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Block Diagram\Gain.emx</LibraryPath>
+  <TimeStamp>2007-9-26 12:15:12</TimeStamp>
+</Description>';
+       type Gain
+        ports
+         signal in input;
+         signal out output;
+       end;
+       icon bg bottom
+        figures
+         rectangle 168.1 328 199.9 360 color 0 fill 15132390;
+         text 'K' 184 344 color 16711680 16 bold;
+       end;
+       implementation eq
+parameters
+	real K = 47;		// gain
+equations
+	output = K * input;
+    implementation_end;
+      Heater 280 344
+       description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\MSe.emx</LibraryPath><TimeStamp>2011-11-29 16:12:33</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type MSe
+        ports
+         thermal out p;
+         signal in effort;
+        restrictions
+         causality fixed out p;
+       end;
+       icon bg bottom
+        figures
+         text 'MSe' 280 344 color 0 18 bold;
+       end;
+       implementation eq
+variables
+	real flow;
+equations
+	p.e = effort;
+	flow = p.f;
+implementation_end;
+      plug heaterState 105 337.3;
+      plug temperature 408.1 471;
+      OneJunction 344 344
+       description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:17:51</TimeStamp>
+</Description>
+</Information>';
+       knot OneJunction
+        ports
+         thermal knot duplicatable none p [1];
+         signal knot out flow [1];
+        restrictions
+         causality constraint one_out p;
+       end;
+       icon bg
+        figures
+         text '1' 344 344 color 0 18 bold;
+       end;
+       implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+      OneJunction1 504 344
+       description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\OneJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:17:51</TimeStamp>
+</Description>
+</Information>';
+       knot OneJunction
+        ports
+         thermal knot duplicatable none p [1];
+         signal knot out flow [1];
+        restrictions
+         causality constraint one_out p;
+       end;
+       icon bg
+        figures
+         text '1' 504 344 color 0 18 bold;
+       end;
+       implementation eq
+equations
+	sum (direct (p.e)) = 0;
+	equal (collect (p.f));
+	flow = first (p.f);
+implementation_end;
+      PlusMinus1 232 344
+       description '<Description><Version>4.0</Version><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Block Diagram\PlusMinus.emx</LibraryPath>
+  <TimeStamp>2007-9-27 10:15:13</TimeStamp>
+</Description>';
+       knot PlusMinus
+        ports
+         signal knot duplicatable in plus [1];
+         signal knot duplicatable in minus [1];
+         signal knot out output [1];
+       end;
+       icon bg ellipse
+        figures
+         ellipse 224 336 240 352 color 0 fill 16777215;
+       end;
+       implementation eq
+equations
+    output = sum (collect (plus)) - sum (collect (minus));
+    implementation_end;
+      PlusMinus2 408 424
+       description '<Description><Version>4.0</Version><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Block Diagram\PlusMinus.emx</LibraryPath>
+  <TimeStamp>2007-9-27 10:15:13</TimeStamp>
+</Description>';
+       knot PlusMinus
+        ports
+         signal knot duplicatable in plus [1];
+         signal knot duplicatable in minus [1];
+         signal knot out output [1];
+       end;
+       icon bg ellipse
+        figures
+         ellipse 400 416 416 432 color 0 fill 16777215;
+       end;
+       implementation eq
+equations
+    output = sum (collect (plus)) - sum (collect (minus));
+    implementation_end;
+      radiator 344 288
+       description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\R.emx</LibraryPath><TimeStamp>2011-11-29 16:35:37</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type R
+        ports
+         power in p;
+       end;
+       icon bg bottom
+        figures
+         text 'R' 344 288 color 0 18 bold;
+       end;
+       implementation eq
+parameters
+	real A = 0.25 {m2};
+	real r = 40;
+equations
+	p.e = 1/(A*r) * p.f;
+
+implementation_end;
+      Roomcapacity 408 288
+       description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\C.emx</LibraryPath><TimeStamp>2011-11-29 15:58:35</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type C
+        ports
+         power in p;
+         signal out state;
+        restrictions
+         causality preferred out p;
+       end;
+       icon bg bottom
+        figures
+         text 'C' 408 288 color 0 18 bold;
+       end;
+       implementation eq
+parameters
+	real surface = 12.0 {m2};
+	real height = 2.5 {m2};
+	real c = 1210;
+	real initialtemp = 291;
+variables
+	real initial;
+initialequations
+	initial = initialtemp*(c*surface*height);
+equations
+	state = int(p.f,initial);
+	p.e = state / (c*surface*height);
+implementation_end;
+      Se 560 344
+       description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\Se.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:36:49</TimeStamp>
+</Description>
+</Information>';
+       type Se
+        ports
+         power out p;
+        restrictions
+         causality fixed out p;
+       end;
+       icon bg bottom
+        figures
+         text 'Se' 560 344 color 0 18 bold;
+       end;
+       implementation eq
+parameters
+	real effort = 278;
+variables
+	real flow;
+equations
+	p.e = effort;
+	flow = p.f;
+implementation_end;
+      Splitter1 232 424
+       description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+       knot Splitter
+        ports
+         signal knot duplicatable out output [1];
+         signal knot in input [1];
+       end;
+       icon bg ellipse
+        figures
+         ellipse 228.8 420.8 235.2 427.2 color -1 fill 0;
+         ellipse 227.7 419.7 236.3 428.3 color -1;
+        terminals
+         input 232 424 fixed;
+       end;
+       implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+      window 504 288
+       description '<Information><Description><Version>4.2</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Bond Graph\R.emx</LibraryPath><TimeStamp>2011-11-29 16:35:37</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type R
+        ports
+         power in p;
+       end;
+       icon bg bottom
+        figures
+         text 'R' 504 288 color 0 18 bold;
+       end;
+       implementation eq
+parameters
+	real A = 3 {m2};
+	real r = 0.35 {K/m2W};
+equations
+	p.e = r/(A) * p.f;
+implementation_end;
+      ZeroJunction 408 344
+       description '<Information>
+ <Description>
+    <Version>4.2</Version>
+<IsMainModel>1</IsMainModel>
+  <KeepParameterValues>False</KeepParameterValues>
+    <LibraryPath>Bond Graph\ZeroJunction.emx</LibraryPath>
+  <TimeStamp>2011-11-29 16:45:16</TimeStamp>
+</Description>
+</Information>';
+       knot ZeroJunction
+        ports
+         thermal knot duplicatable none p [1];
+         signal knot out effort [1];
+        restrictions
+         causality constraint one_in p;
+       end;
+       icon bg
+        figures
+         text '0' 408 344 color 0 18 bold;
+       end;
+       implementation eq
+equations
+	sum (direct (p.f)) = 0;
+	equal (collect (p.e));
+	effort = first (p.e);
+implementation_end;
+     end;
+     connections
+      Constant1\output -> Splitter1\input;
+      Gain\output -> PlusMinus1\plus;
+      Heater\p => OneJunction\p;
+      heaterState -> Gain\input;
+      OneJunction\p => radiator\p;
+      OneJunction\p => ZeroJunction\p;
+      OneJunction1\p <= Se\p;
+      OneJunction1\p => window\p;
+      OneJunction1\p => ZeroJunction\p;
+      PlusMinus1\output -> Heater\effort;
+      PlusMinus2\output -> temperature;
+      PlusMinus2\plus <- ZeroJunction\effort;
+      Splitter1\output -> PlusMinus1\plus;
+      Splitter1\output -> PlusMinus2\minus 408 416;
+      ZeroJunction\p => Roomcapacity\p;
+     end;
+    implementation_end;
+   SmallRoomOut 560 336
+    description '<Information><Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Signal\Block Diagram\SignalMonitor.emx</LibraryPath><TimeStamp>2007-9-26 12:14:4</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+    type SignalMonitor
+     ports
+      signal in input;
+    end;
+    icon bg bottom
+     figures
+      rectangle 544 320 576 352 color 0 fill 15132390;
+      rectangle 549.7 325.8 570.3 346.6 color 16711680 fill 11776947 width 2;
+      rectangle 551.8 328.4 567.9 344 color -1 fill 16777215;
+      line 553.9 330.7 553.9 342 color 0 fill 16777215;
+      line 552 340.4 564.5 340.4 color 0 fill 16777215;
+      line 553.5 340.1 566.4 333.7 color 255 fill 16777215;
+    end;
+    implementation eq
+variables
+	real interesting plot;
+equations
+	plot = input;
+   implementation_end;
+   Splitter1 336 496
+    description '<Description><Version>4.0</Version>
+   <LibraryPath>C:\Program Files\20-sim 4.0\System\SplitterBoolean.emx</LibraryPath>
+  <TimeStamp>2007-10-31 11:27:48</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+    knot Splitter
+     ports
+      signal knot boolean duplicatable out output [1];
+      signal knot boolean in input [1];
+    end;
+    icon bg ellipse
+     figures
+      ellipse 332.8 492.8 339.2 499.2 color -1 fill 0;
+      ellipse 331.7 491.7 340.3 500.3 color -1;
+     terminals
+      input 336 496 fixed;
+    end;
+    implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+   Splitter2 336 416
+    description '<Description><Version>4.0</Version>
+   <LibraryPath>C:\Program Files\20-sim 4.0\System\SplitterBoolean.emx</LibraryPath>
+  <TimeStamp>2007-10-31 11:27:48</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+    knot Splitter
+     ports
+      signal knot boolean duplicatable out output [1];
+      signal knot boolean in input [1];
+    end;
+    icon bg ellipse
+     figures
+      ellipse 332.8 412.8 339.2 419.2 color -1 fill 0;
+      ellipse 331.7 411.7 340.3 420.3 color -1;
+     terminals
+      input 336 416 fixed;
+    end;
+    implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+   Splitter3 496 496
+    description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+    knot Splitter
+     ports
+      signal knot duplicatable out output [1];
+      signal knot in input [1];
+    end;
+    icon bg ellipse
+     figures
+      ellipse 492.8 492.8 499.2 499.2 color -1 fill 0;
+      ellipse 491.7 491.7 500.3 500.3 color -1;
+     terminals
+      input 496 496 fixed;
+    end;
+    implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+   Thermostat 168 496
+    description '<Information><Description><Version>4.0</Version><LibraryPath>C:\Program Files\20-sim 4.0\System\Submodel.emx</LibraryPath><TimeStamp>2007-10-31 11:32:54</TimeStamp><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+    type Submodel
+     ports
+      signal in targetTemperature {degC} ;
+      signal in temperature {degC} ;
+      signal boolean out heaterState;
+    end;
+    implementation bg
+     submodels
+      greater 696 312
+       description '<Information><Description><Version>4.0</Version><LibraryPath>Template\Submodel-Equation.emx</LibraryPath><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><TimeStamp>2007-11-1 22:32:1</TimeStamp><AllowLibraryUpdate>False</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type 'Submodel-Equation'
+        ports
+         signal in input1;
+         signal out output;
+         signal in input2;
+       end;
+       implementation eq
+/* Equation Submodel
+Enter your equations here. You can use the Toolbar buttons at the top ( Add , f(x) etc. ).
+*/
+equations
+	// start typing here
+	output = input1 > input2;
+ implementation_end;
+      maxTemp 520 312
+       description '<Information><Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Signal\Block Diagram\Gain.emx</LibraryPath><TimeStamp>2007-9-26 12:15:12</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type Gain
+        ports
+         signal in input;
+         signal out output;
+       end;
+       icon bg bottom
+        figures
+         rectangle 504.1 296 535.9 328 color 0 fill 15132390;
+         text 'K' 520 312 color 16711680 16 bold;
+       end;
+       implementation eq
+parameters
+	real K = 1.015;		// gain
+equations
+	output = K * input;
+    implementation_end;
+      minTemp 520 240
+       description '<Information><Description><Version>4.0</Version><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><LibraryPath>Signal\Block Diagram\Gain.emx</LibraryPath><TimeStamp>2007-9-26 12:15:12</TimeStamp><AllowLibraryUpdate>True</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type Gain
+        ports
+         signal in input;
+         signal out output;
+       end;
+       icon bg bottom
+        figures
+         rectangle 504.1 224 535.9 256 color 0 fill 15132390;
+         text 'K' 520 240 color 16711680 16 bold;
+       end;
+       implementation eq
+parameters
+	real K = 0.985;		// gain
+equations
+	output = K * input;
+    implementation_end;
+      plug targetTemperature 352 280;
+      plug temperature 344 416;
+      plug heaterState 984 272;
+      SetResetFlipFlop 856 272
+       description '<Description>
+ <Version>4.0</Version>
+ <IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+   <LibraryPath>Signal\Logical\Discrete\SetResetFlipFlop.emx</LibraryPath>
+  <TimeStamp>2007-12-18 23:21:3</TimeStamp>
+</Description>';
+       type 'SetResetFlipFlop-Discrete'
+        ports
+         signal in input1;
+         signal in input2;
+         signal out output;
+       end;
+       icon bg bottom
+        figures
+         rectangle 831.2 256 880.8 288 color 0 fill 15132390;
+         text 'SR-fflop' 857.6 266.7 color 16711680 14;
+         text 'discrete' 854.3 279.5 color 16711680;
+       end;
+       implementation eq
+variables
+	real oldoutput;
+equations
+	oldoutput = previous (output, 0);	
+	output = if input1 <= 0.5 then 
+		if input2 <= 0.5 then
+			oldoutput
+		else 
+			0.0
+		end
+	else  
+		if input2 <= 0.5 then
+			1.0
+		else
+			oldoutput
+		end
+	end;
+     implementation_end;
+      smaller 696 240
+       description '<Information><Description><Version>4.0</Version><LibraryPath>Template\Submodel-Equation.emx</LibraryPath><IsMainModel>1</IsMainModel><KeepParameterValues>False</KeepParameterValues><TimeStamp>2007-11-1 22:32:1</TimeStamp><AllowLibraryUpdate>False</AllowLibraryUpdate><Configuration><struct><member><name>DocumentationMask</name><value><struct></struct></value></member></struct></Configuration></Description></Information>';
+       type 'Submodel-Equation'
+        ports
+         signal in input1;
+         signal out output;
+         signal in input2;
+       end;
+       implementation eq
+/* Equation Submodel
+Enter your equations here. You can use the Toolbar buttons at the top ( Add , f(x) etc. ).
+*/
+equations
+	// start typing here
+	output = input1 < input2;
+ implementation_end;
+      Splitter1 464 280
+       description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+       knot Splitter
+        ports
+         signal knot duplicatable out output [1];
+         signal knot in input [1];
+       end;
+       icon bg ellipse
+        figures
+         ellipse 460.8 276.8 467.2 283.2 color -1 fill 0;
+         ellipse 459.7 275.7 468.3 284.3 color -1;
+        terminals
+         input 464 280 fixed;
+       end;
+       implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+      Splitter2 624 336
+       description '<Description><Version>4.0</Version>
+   <LibraryPath>Signal\Block Diagram\Splitter.emx</LibraryPath>
+  <TimeStamp>2008-01-17 11:28:29</TimeStamp>
+<IsMainModel>1</IsMainModel>
+ <KeepParameterValues>False</KeepParameterValues>
+</Description>';
+       knot Splitter
+        ports
+         signal knot duplicatable out output [1];
+         signal knot in input [1];
+       end;
+       icon bg ellipse
+        figures
+         ellipse 620.8 332.8 627.2 339.2 color -1 fill 0;
+         ellipse 619.7 331.7 628.3 340.3 color -1;
+        terminals
+         input 624 336 fixed;
+       end;
+       implementation eq
+equations
+    collect (output) = input;
+implementation_end;
+     end;
+     connections
+      greater\output -> SetResetFlipFlop\input2 800 312;
+      maxTemp\output -> greater\input2;
+      minTemp\output -> smaller\input2;
+      SetResetFlipFlop\output -> heaterState;
+      smaller\output -> SetResetFlipFlop\input1 800 240;
+      Splitter1\output -> maxTemp\input 464 312;
+      Splitter1\output -> minTemp\input 464 272 464 240;
+      Splitter2\output -> greater\input1 624 336;
+      Splitter2\output -> smaller\input1 624 256;
+      targetTemperature -> Splitter1\input;
+      temperature -> Splitter2\input 624 416;
+     end;
+    implementation_end;
+  end;
+  connections
+   Constant\output -> Thermostat\targetTemperature;
+   Hold\output -> Splitter1\input;
+   LargeRoom\temperature -> Splitter3\input;
+   MediumRoom\temperature -> MediumRoomOut\input;
+   Sample\output -> Thermostat\temperature 168 576;
+   SmallRoomOut\input <- SmallRoom\temperature;
+   Splitter1\output -> LargeRoom\heaterState;
+   Splitter1\output -> Splitter2\input;
+   Splitter2\output -> MediumRoom\heaterState 336 416;
+   Splitter2\output -> SmallRoom\heaterState 336 336;
+   Splitter3\output -> LargeRoomOut\input;
+   Splitter3\output -> Sample\input 496 576;
+   Thermostat\heaterState -> Hold\input;
+  end;
+ implementation_end;
+]]>
+</Sidops>
+ </Model>
+ <Experiments>
+     <DefaultExperiment><![CDATA[Experiment 1]]>
+</DefaultExperiment>
+  <Experiment>
+    <Name>Experiment 1</Name>
+    <CreatedBy></CreatedBy>
+    <Info></Info>
+<ExpData>
+  <VersionNumber>4.6</VersionNumber>
+  <ModelProperties>
+    <ModelProperty section="CCodeDialog" entry="SubmodelName" value="Thermostat"/>
+    <ModelProperty section="CCodeDialog" entry="TargetName" value="FMU 2.0 export for 20-sim submodel"/>
+    <ModelProperty section="CCodeDialog" entry="TargetDirectory" value="D:\Documents\Work\RU\workspaces\Models\RoomThermostat\Thermostat"/>
+    <ModelProperty section="processing" entry="showresult" value="1"/>
+    <ModelProperty section="processing" entry="debug_showresult" value="1"/>
+  </ModelProperties>
+  <Variables>
+   <Parameters>
+   </Parameters>
+   <Initials>
+    <Variable>
+     <Name>LargeRoom\Roomcapacity\initial</Name>
+     <Value>88027500</Value>
+    </Variable>
+    <Variable>
+     <Name>MediumRoom\Roomcapacity\initial</Name>
+     <Value>29929350</Value>
+    </Variable>
+    <Variable>
+     <Name>SmallRoom\Roomcapacity\initial</Name>
+     <Value>10563300</Value>
+    </Variable>
+   </Initials>
+  </Variables>
+  <PlotSpecs>
+   <VarNames>
+    <VarName>time</VarName>
+    <VarName>LargeRoom\temperature</VarName>
+    <VarName>Thermostat\targetTemperature</VarName>
+    <VarName>Thermostat\heaterState</VarName>
+   </VarNames>
+   <Plots>
+    <Plot>
+     <PlotType>GraphPlot</PlotType>
+     <BasePlot>
+       <PlotId>1</PlotId>
+       <UseWindowsBGColor>true</UseWindowsBGColor>
+       <BGColor>15790320</BGColor>
+       <PlotIsVisible>true</PlotIsVisible>
+     </BasePlot>
+     <Grid>
+      <DrawGrid>true</DrawGrid>
+      <GridColor>15780518</GridColor>
+      <XTicks>10</XTicks>
+      <YTicks>10</YTicks>
+      <ZTicks>10</ZTicks>
+      <Use3DLook>false</Use3DLook>
+     </Grid>
+     <PlotBGColor>16777215</PlotBGColor>
+     <ShowPlotTitle>true</ShowPlotTitle>
+     <TitlePosition>1</TitlePosition>
+     <PlotTitle>model</PlotTitle>
+     <ShowXValues>true</ShowXValues>
+     <Fonts>
+      <TitleFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </TitleFont>
+      <LabelFont>
+       <Name>Arial</Name>
+       <Height>12</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </LabelFont>
+      <ValuesFont>
+       <Name>Arial</Name>
+       <Height>10</Height>
+       <PitchFamily>34</PitchFamily>
+       <Weight>400</Weight>
+       <Italic>0</Italic>
+       <UnderLine>0</UnderLine>
+       <StrikeOut>0</StrikeOut>
+       <Color>0</Color>
+      </ValuesFont>
+     </Fonts>
+     <SharedXAxis>true</SharedXAxis>
+     <SharedYAxis>false</SharedYAxis>
+     <SharedZAxis>false</SharedZAxis>
+     <XAxes>
+      <Axis>
+       <Minimum>0</Minimum>
+       <Maximum>10800</Maximum>
+       <Linear>true</Linear>
+       <Scaling>3</Scaling>
+       <Label>time</Label>
+      </Axis>
+     </XAxes>
+     <YAxes>
+      <Axis>
+       <Minimum>17.5</Minimum>
+       <Maximum>18.5</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>temperature</Label>
+      </Axis>
+      <Axis>
+       <Minimum>-5</Minimum>
+       <Maximum>45</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>targetTemperature</Label>
+      </Axis>
+      <Axis>
+       <Minimum>-0.4</Minimum>
+       <Maximum>1.6</Maximum>
+       <Linear>true</Linear>
+       <Scaling>1</Scaling>
+       <Label>heaterState</Label>
+      </Axis>
+     </YAxes>
+     <ZAxes>
+     </ZAxes>
+     <Curves>
+      <Curve>
+       <LineColor>16711680</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711680</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>LargeRoom\temperature</VarName>
+       </YCurveData>
+      </Curve>
+      <Curve>
+       <LineColor>16711935</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>16711935</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>Thermostat\targetTemperature</VarName>
+       </YCurveData>
+      </Curve>
+      <Curve>
+       <LineColor>255</LineColor>
+       <LineStyle>1</LineStyle>
+       <TickColor>255</TickColor>
+       <TickStyle>0</TickStyle>
+       <CurveVisible>true</CurveVisible>
+       <PixelThresshold>1</PixelThresshold>
+       <LineThickness>1</LineThickness>
+       <LineOrder>1</LineOrder>
+       <ShowYValues>true</ShowYValues>
+       <XCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>time</VarName>
+       </XCurveData>
+       <YCurveData>
+        <ShowUnit>true</ShowUnit>
+        <VarName>Thermostat\heaterState</VarName>
+       </YCurveData>
+      </Curve>
+     </Curves>
+     <Legenda>
+      <ShowLegenda>true</ShowLegenda>
+     </Legenda>
+    </Plot>
+   </Plots>
+   <PlotPanels>
+    <PlotPanel>
+     <PlotPanelId>1</PlotPanelId>
+     <PlotPanelVisible>true</PlotPanelVisible>
+     <Name>Window 1</Name>
+     <Tiling>0</Tiling>
+     <PlotIds>
+       <PlotId>1</PlotId>
+     </PlotIds>
+     <ToggleState>Base</ToggleState>
+    </PlotPanel>
+   </PlotPanels>
+   <WindowRectangles virtualDesktopWidth="5280" virtualDesktopHeight="3244">
+     <WindowRectangle monitor="0" left="0" top="0" right="2560" bottom="1440" plotpanelid="1">
+-0.00195313 0 1.00156 0.963194
+     </WindowRectangle>
+   </WindowRectangles>
+  </PlotSpecs>
+  <RunSpecs>
+   <SimulatorSettings>
+    <StartTime>0</StartTime>
+    <FinishTime>10800</FinishTime>
+    <Warp>false</Warp>
+    <UseOutputAfterEach>true</UseOutputAfterEach>
+    <OutputAfterEach>3</OutputAfterEach>
+    <EventEpsilon>1e-006</EventEpsilon>
+    <AlgebraicTolerance>1e-007</AlgebraicTolerance>
+    <SteadyStateAnalysis>false</SteadyStateAnalysis>
+    <UpdateHoldInstructions>true</UpdateHoldInstructions>
+    <DiscreteSystems>
+     <DiscreteSystem>
+      <DiscreteID>Sample\output</DiscreteID>
+      <TimeInterval>30</TimeInterval>
+      <InitialSampleTimeDelay>0</InitialSampleTimeDelay>
+      <FixedSampleTimeDelay>0</FixedSampleTimeDelay>
+      <VariableTimeDelayMin>0</VariableTimeDelayMin>
+      <VariableTimeDelayMax>0</VariableTimeDelayMax>
+      <VariableTimeDelayMean>0</VariableTimeDelayMean>
+      <VariableTimeDelayDeviation>0</VariableTimeDelayDeviation>
+      <UseVariableTimeDelay>false</UseVariableTimeDelay>
+      <UniformVariableTimeDelay>false</UniformVariableTimeDelay>
+      <UseGlobalTime>true</UseGlobalTime>
+      <HoldTimeDelay>0</HoldTimeDelay>
+      <ActionOnSampleMissed>0</ActionOnSampleMissed>
+     </DiscreteSystem>
+    </DiscreteSystems>
+   </SimulatorSettings>
+   <IntegrationMethods>
+    <IntegrationMethod>
+     <Name>Euler</Name>
+     <StepSize>0.1</StepSize>
+     <AutoStepSize>false</AutoStepSize>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>BackwardEuler</Name>
+     <AbsoluteTolerance>1e-005</AbsoluteTolerance>
+     <RelativeTolerance>1e-006</RelativeTolerance>
+     <AlgebraicAbsoluteTolerance>1e-005</AlgebraicAbsoluteTolerance>
+     <AlgebraicRelativeTolerance>1e-005</AlgebraicRelativeTolerance>
+     <StepSize>5</StepSize>
+     <Alpha>1</Alpha>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>AdamsBashforth</Name>
+     <StepSize>0.01</StepSize>
+     <AutoStepSize>false</AutoStepSize>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>RungeKutta2</Name>
+     <StepSize>0.01</StepSize>
+     <AutoStepSize>false</AutoStepSize>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>RungeKutta4</Name>
+     <StepSize>0.01</StepSize>
+     <AutoStepSize>false</AutoStepSize>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>RungeKutta8</Name>
+     <UseInitialStepSize>false</UseInitialStepSize>
+     <InitialStepSize>0</InitialStepSize>
+     <UseMaximumStepSize>false</UseMaximumStepSize>
+     <MaximumStepSize>0</MaximumStepSize>
+     <AbsoluteTolerance>1e-006</AbsoluteTolerance>
+     <RelativeTolerance>1e-006</RelativeTolerance>
+     <SafetyFactor>0.9</SafetyFactor>
+     <Factor1>0.33</Factor1>
+     <Factor2>6</Factor2>
+     <Beta>0</Beta>
+     <UseMaxNrSteps>false</UseMaxNrSteps>
+     <MaxNrSteps>100000</MaxNrSteps>
+     <UseStiffDetection>false</UseStiffDetection>
+     <MaxNrStiffnessSteps>1000</MaxNrStiffnessSteps>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>RungeKuttaFehlberg</Name>
+     <UseInitialStepSize>false</UseInitialStepSize>
+     <InitialStepSize>0</InitialStepSize>
+     <UseMaximumStepSize>false</UseMaximumStepSize>
+     <MaximumStepSize>0</MaximumStepSize>
+     <AbsoluteTolerance>1e-006</AbsoluteTolerance>
+     <RelativeTolerance>1e-006</RelativeTolerance>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>VodeAdams</Name>
+     <UseInitialStepSize>false</UseInitialStepSize>
+     <InitialStepSize>0</InitialStepSize>
+     <UseMaximumStepSize>false</UseMaximumStepSize>
+     <MaximumStepSize>0</MaximumStepSize>
+     <AbsoluteTolerance>1e-006</AbsoluteTolerance>
+     <RelativeTolerance>1e-006</RelativeTolerance>
+     <VodeUseBDF>true</VodeUseBDF>
+     <VodeUseNewton>true</VodeUseNewton>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>BDFMethod</Name>
+     <AbsoluteTolerance>1e-005</AbsoluteTolerance>
+     <RelativeTolerance>1e-005</RelativeTolerance>
+     <AlgebraicAbsoluteTolerance>1e-005</AlgebraicAbsoluteTolerance>
+     <AlgebraicRelativeTolerance>1e-005</AlgebraicRelativeTolerance>
+     <UseInitialStepSize>true</UseInitialStepSize>
+     <InitialStepSize>5</InitialStepSize>
+     <UseMaximumStepSize>true</UseMaximumStepSize>
+     <MaximumStepSize>5</MaximumStepSize>
+     <UseFixedStepSize>false</UseFixedStepSize>
+     <FixedStepSize>0</FixedStepSize>
+    </IntegrationMethod>
+    <IntegrationMethod>
+     <Name>MeBDFiMethod</Name>
+     <AbsoluteTolerance>1e-005</AbsoluteTolerance>
+     <RelativeTolerance>1e-005</RelativeTolerance>
+     <AlgebraicAbsoluteTolerance>1e-005</AlgebraicAbsoluteTolerance>
+     <AlgebraicRelativeTolerance>1e-005</AlgebraicRelativeTolerance>
+     <UseInitialStepSize>false</UseInitialStepSize>
+     <InitialStepSize>0</InitialStepSize>
+     <UseMaximumStepSize>false</UseMaximumStepSize>
+     <MaximumStepSize>0</MaximumStepSize>
+     <UseFixedStepSize>false</UseFixedStepSize>
+     <FixedStepSize>0</FixedStepSize>
+    </IntegrationMethod>
+    <SelectedIntegrationMethod>0</SelectedIntegrationMethod>
+   </IntegrationMethods>
+  </RunSpecs>
+  <MultipleRun>
+   <NrSteps>10</NrSteps>
+   <CopyFromStates>false</CopyFromStates>
+   <JoinParameterVariation>true</JoinParameterVariation>
+   <ClearAfterRun>true</ClearAfterRun>
+   <RedrawAfterRun>false</RedrawAfterRun>
+   <DrawDuringSimulation>true</DrawDuringSimulation>
+   <ActionBeforeOptimization>0</ActionBeforeOptimization>
+   <CompareValue>0</CompareValue>
+   <UseCompareValue>true</UseCompareValue>
+   <MultipleRunType>MultipleRun</MultipleRunType>
+   <Minimize>true</Minimize>
+   <OptimizationVariable></OptimizationVariable>
+   <ResulVarUsage>UseEndValue</ResulVarUsage>
+   <Tolerance>0.001</Tolerance>
+   <OptimizationMethod>BroydonFletcherGoldfarbShanno</OptimizationMethod>
+   <MultipleRunVariables>
+   </MultipleRunVariables>
+  </MultipleRun>
+  <ExportData>
+   <WriteAsText>true</WriteAsText>
+   <ReadAsText>true</ReadAsText>
+   <WriteHeader>true</WriteHeader>
+   <ReadHeader>true</ReadHeader>
+   <ReadFilename></ReadFilename>
+   <WriteFilename></WriteFilename>
+   <DoWrite>false</DoWrite>
+   <ExportVariables>
+   </ExportVariables>
+   <ImportVariables>
+   </ImportVariables>
+  </ExportData>
+  <BreakPoints>
+  </BreakPoints>
+  <AnimationPlayback>
+   <PlaybackSpeed>1</PlaybackSpeed>
+  </AnimationPlayback>
+</ExpData>
+  </Experiment>
+</Experiments>
+</Document>

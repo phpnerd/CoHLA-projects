@@ -1,0 +1,69 @@
+import "orti.cohla"
+
+FederateClass Room {
+  Type FMU
+  Attributes {
+    Input Boolean heaterState
+    InOutput Real temperature
+  }
+  Parameters {
+    Real RadiatorSize "radiator.A"
+    Real Surface "Roomcapacity.surface"
+    Real Height "Roomcapacity.height"
+    Real InitTemp "Roomcapacity.initialtemp"
+    Real WindowSize "window.A"
+  }
+  TimePolicy RegulatedAndConstrained
+  DefaultModel "../../Room_20sim.fmu"
+  AdvanceType NextMessageRequest
+  DefaultStepSize 3.0
+  DefaultLookahead 0.1
+}
+
+FederateClass Thermostat { 
+  Type FMU
+  Attributes { 
+    Output Boolean heaterState
+    InOutput Real targetTemperature
+    Input Real temperature
+  }
+  Parameters {
+    Real targetTemperature "targetTemperature"
+    Real temperature "temperature"
+    Boolean heaterState "heaterState"
+  }
+  TimePolicy RegulatedAndConstrained
+  DefaultModel "../../Thermostat_20sim.fmu"
+  AdvanceType TimeAdvanceRequest
+  DefaultStepSize 30.0
+  DefaultLookahead 0.1
+}
+
+FederateClass Logger {
+  Type CSV-logger {
+    DefaultMeasureTime 7200.0
+  }
+}
+
+Configuration Large for Room {
+  Surface = "45.0"
+  WindowSize = "11"
+  RadiatorSize = "1.0"
+}
+
+Federation House {
+  Instances {
+    Thermostat : Thermostat
+    Livingroom : Room
+    log : Logger
+  }
+  Connections {
+    { Thermostat.temperature <- Livingroom.temperature }
+    { Livingroom.heaterState <- Thermostat.heaterState }
+    { log <- Thermostat.targetTemperature, Thermostat.heaterState, Livingroom.temperature }
+  }
+  Situation DefaultBase {
+    Apply Large to Livingroom
+    Init Thermostat.targetTemperature as "18.0"
+  }
+}

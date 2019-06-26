@@ -1,0 +1,63 @@
+Environment {
+  RTI { 
+    OpenRTI
+    Libraries "/opt/OpenRTI-libs"
+  }
+  PublishOnlyChanges
+}
+
+FederateClass SingleWatertank {
+  Type FMU
+  Attributes {
+    Input Real valvecontrol
+    Output Real level
+  }
+  DefaultModel "../../models/singlewatertank-20-sim.fmu"
+  AdvanceType TimeAdvanceRequest
+  DefaultStepSize 0.1
+  DefaultLookahead 0.000001
+}
+
+FederateClass WatertankController {
+    Type FMU
+    Attributes {
+      Input Real level
+      Output Boolean valve
+    }
+    Parameters {
+      Real Maxlevel "maxlevel"
+      Real Minlevel "minlevel"
+    }
+    DefaultModel "../../models/SingleWT-controller.fmu"
+    AdvanceType TimeAdvanceRequest
+    DefaultStepSize 0.1
+    DefaultLookahead 0.000001
+}
+
+FederateClass Logger {
+  Type CSV-logger {
+    DefaultMeasureTime 30.0
+  }
+}
+
+Configuration defaultWC for WatertankController {
+  Maxlevel = "2.0"
+  Minlevel = "1.0"
+}
+
+Federation SingleWatertankSystem {
+  Instances {
+    wt: SingleWatertank
+    controller : WatertankController
+    log : Logger
+  }
+  Connections {
+    { controller.level <- wt.level }
+    { wt.valvecontrol <- controller.valve }
+    { log <- wt.level, controller.valve }
+  }
+  
+  Situation default {
+    Apply defaultWC to controller
+  }
+}
