@@ -1,0 +1,250 @@
+//
+// Copyright (c) Thomas Nägele and contributors. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+//
+
+Configuration {
+  #Actors: 1
+  OccupancySensorRanges: 150
+  HasLogger
+  MeasureTime: 1200
+  HideSensorRange
+  Distributions: 2 3 4 5 6 7 8 9 10 11 12 13 14
+//  SeparateClasses
+  ModelDir: "../../../models"
+  POOSL
+}
+
+Building MediumFloor {
+  Room r01 {
+    Area: (0, 0) (500, 0) (500, 300) (0, 300)
+    Devices {
+      Light l1 on (125, 150)
+      Sensor s1 on (125, 150)
+      Light l2 on (375, 150)
+      Sensor s2 on (375, 150)
+    }
+  }
+  Room r02 {
+    Area: (500, 0) (1000, 0) (1000, 300) (500, 300)
+    Devices {
+      Light l1 on (625, 150)
+      Sensor s1 on (625, 150)
+      Light l2 on (875, 150)
+      Sensor s2 on (875, 150)
+    }
+  }
+  Room r03 {
+    Area: (0, 450) (500, 450) (500, 750) (0, 750)
+    Devices {
+      Light l1 on (125, 600)
+      Sensor s1 on (125, 600)
+      Light l2 on (375, 600)
+      Sensor s2 on (375, 600)
+    }
+  }
+  Room r04 {
+    Area: (500, 450) (1000, 450) (1000, 750) (500, 750)
+    Devices {
+      Light l1 on (625, 600)
+      Sensor s1 on (625, 600)
+      Light l2 on (875, 600)
+      Sensor s2 on (875, 600)
+    }
+  }
+  Room r05 {
+    Area: (0, 750) (500, 750) (500, 1050) (0, 1050)
+    Devices {
+      Light l1 on (125, 900)
+      Sensor s1 on (125, 900)
+      Light l2 on (375, 900)
+      Sensor s2 on (375, 900)
+    }
+  }
+  Room r06 {
+    Area: (500, 750) (1000, 750) (1000, 1050) (500, 1050)
+    Devices {
+      Light l1 on (625, 900)
+      Sensor s1 on (625, 900)
+      Light l2 on (875, 900)
+      Sensor s2 on (875, 900)
+    }
+  }
+  Room r07 {
+    Area: (0, 1200) (500, 1200) (500, 1500) (0, 1500)
+    Devices {
+      Light l1 on (125, 1350)
+      Sensor s1 on (125, 1350)
+      Light l2 on (375, 1350)
+      Sensor s2 on (375, 1350)
+    }
+  }
+  Room r08 {
+    Area: (500, 1200) (1000, 1200) (1000, 1500) (500, 1500)
+    Devices {
+      Light l1 on (625, 1350)
+      Sensor s1 on (625, 1350)
+      Light l2 on (875, 1350)
+      Sensor s2 on (875, 1350)
+    }
+  }
+  Room r09 {
+    Area: (1150, 0) (1450, 0) (1450, 500) (1150, 500)
+    Devices {
+      Light l1 on (1300, 125)
+      Sensor s1 on (1300, 125)
+      Light l2 on (1300, 375)
+      Sensor s2 on (1300, 375)
+    }
+  }
+  Room r10 {
+    Area: (1150, 500) (1450, 500) (1450, 1000) (1150, 1000)
+    Devices {
+      Light l1 on (1300, 625)
+      Sensor s1 on (1300, 625)
+      Light l2 on (1300, 875)
+      Sensor s2 on (1300, 875)
+    }
+  }
+  Room r11 {
+    Area: (1150, 1000) (1450, 1000) (1450, 1500) (1150, 1500)
+    Devices {
+      Light l1 on (1300, 1125)
+      Sensor s1 on (1300, 1125)
+      Light l2 on (1300, 1375)
+      Sensor s2 on (1300, 1375)
+    }
+  }
+  
+  Corridor c01 {
+    Area: (1000, 0) (1150, 0) (1150, 1500) (1000, 1500)
+    Rooms: r02 r04 r06 r08 r09 r10 r11
+    Devices {
+      Light l1 on (1075, 150)
+      Sensor s1 on (1075, 150)
+      Sensor s2 on (1075, 375)
+      Light l3 on (1075, 625)
+      Sensor s3 on (1075, 625)
+      Light l4 on (1075, 875)
+      Sensor s4 on (1075, 875)
+      Sensor s5 on (1075, 1125)
+      Light l6 on (1075, 1350)
+      Sensor s6 on (1075, 1350)
+    }
+  }
+  Corridor c02 {
+    Area: (0, 300) (1150, 300) (1150, 450) (0, 450)
+    Rooms: r01 r02 r03 r04 r09
+    Devices {
+      Light l1 on (120, 375)
+      Sensor s1 on (120, 375)
+      Light l2 on (360, 375)
+      Sensor s2 on (360, 375)
+      Light l3 on (600, 375)
+      Sensor s3 on (600, 375)
+      Light l4 on (840, 375)
+      Sensor s4 on (840, 375)
+      Light l5 on (1075, 375)
+      Sensor s5 on (1075, 375)
+    }
+  }
+  Corridor c03 {
+    Area: (0, 1050) (1150, 1050) (1150, 1200) (0, 1200)
+    Rooms: r05 r06 r07 r08 r11
+    Devices {
+      Light l1 on (120, 1125)
+      Sensor s1 on (120, 1125)
+      Light l2 on (360, 1125)
+      Sensor s2 on (360, 1125)
+      Light l3 on (600, 1125)
+      Sensor s3 on (600, 1125)
+      Light l4 on (840, 1125)
+      Sensor s4 on (840, 1125)
+      Light l5 on (1075, 1125)
+      Sensor s5 on (1075, 1125)
+    }
+  }
+  
+  Scenarios {
+    Scenario ShortDay for Actor 0 {
+//      Interpolate 5
+                (0, 375)
+        [20]    (1075, 375)
+        [10]    (1075, 125)
+        [10]    (1350, 350)
+        [120]   (1350, 350)   // @desk (r09)
+        [10]    (1075, 125)
+        [15]    (1050, 400)
+        [45]    (1050, 400)   // coffee
+        [10]    (1075, 125)
+        [5]     (1350, 350)
+        [600]   (1350, 350)   // @desk
+        [10]    (1075, 125)
+        [5]     (1075, 375)
+        [10]    (625, 375)
+        [5]     (625, 275)
+        [20]    (625, 275)    // fetching @r02
+        [5]     (625, 375)
+        [10]    (125, 375)
+        [5]     (125, 275)
+        [15]    (125, 275)    // fetching @r01
+        [5]     (125, 375)
+        [10]    (1050, 400)
+        [45]    (1050, 400)   // coffee
+        [10]    (1075, 625)
+        [5]     (1175, 625)
+        [10]    (1175, 625)   // fetching @r10
+        [5]     (1075, 625)
+        [10]    (1075, 1125)
+        [10]    (125, 1125)
+        [5]     (125, 1025)
+        [10]    (125, 1025)   // fetching @r05
+        [5]     (125, 1125)
+        [15]    (1300, 1100)
+        [600]   (1300, 1100)  // stand-up @r11
+        [15]    (625, 1125)
+        [5]     (625, 1225)
+        [80]    (625, 1225)   // question @r08
+        [5]     (625, 1125)
+        [5]     (1025, 1075)
+        [10]    (1050, 400)
+        [30]    (1050, 400)   //coffee
+        [10]    (1075, 125)
+        [10]    (1350, 350)
+        [2400]  (1350, 350)   // @desk
+        [10]    (1075, 125)
+        [5]     (1075, 375)
+        [10]    (125, 375)
+        [5]     (125, 525)
+        [180]   (125, 525)    // question @r03
+        [5]     (125, 375)
+        [15]    (1050, 400)
+        [25]    (1050, 400)   // coffee
+        [5]     (1075, 125)
+        [5]     (1350, 350)
+        [1440]  (1350, 350)   // @desk
+        [5]     (1075, 125)
+        [10]    (1075, 1125)
+        [5]     (625, 1125)
+        [5]     (625, 900)
+        [90]    (625, 900)    // question @r06
+        [5]     (850, 950)
+        [330]   (850, 950)    // question @r06
+        [10]    (625, 1125)
+        [5]     (1075, 1125)
+        [15]    (1075, 125)
+        [5]     (1350, 350)
+        [960]   (1350, 350)   // @desk
+        [5]     (1075, 125)
+        [5]     (1050, 400)
+        [30]    (1050, 400)   // coffee
+        [5]     (1075, 125)
+        [5]     (1350, 350)
+        [1020]  (1350, 350)   // @desk
+        [5]     (1075, 125)
+        [10]    (1075, 375)
+        [20]    (0, 375)
+    }
+  }
+  
+}

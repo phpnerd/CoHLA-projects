@@ -1,0 +1,55 @@
+//
+// Copyright (c) Thomas Nägele and contributors. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+//
+
+process class OccupancySensor(stepSize, timeOut : Real)
+ports
+  port
+messages
+  port?motion(Boolean)
+variables
+  motion, occupied : Boolean
+  stepsize, timeout : Real
+init
+  init()()
+methods
+  init()()
+    motion := false;
+    occupied := false;
+    if timeout == nil then timeout := timeOut fi;
+    if stepsize == nil then stepsize := stepSize fi;
+    par Off()() and HandleActivity()() rap
+//    Off()()
+    
+  Off()()
+    occupied := false;
+    motion := false;
+    while !motion do
+      delay stepsize
+    od;
+    On()()
+  
+  On()()
+    occupied := true;
+//    [!motion]
+    while motion do 
+      delay stepsize
+    od;
+    sel
+      delay timeout;
+      Off()()
+    or
+      [motion]
+      delay stepsize;
+      On()()
+    les
+  
+  HandleActivity()()
+    port?motion(motion);
+    HandleActivity()()
+
+system
+instances
+  occupancySensor : OccupancySensor(stepSize := 1.0, timeOut := 5.0)
+channels

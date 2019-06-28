@@ -1,0 +1,300 @@
+//
+// Copyright (c) Thomas Nägele and contributors. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+//
+
+Configuration {
+  #Actors: 1
+  OccupancySensorRanges: 150
+  HasLogger
+  MeasureTime: 1200
+  HideSensorRange
+  Distributions: 2 3 4 5 6 7 8 9 10 11 12
+//  SeparateClasses
+  ModelDir: "../../../models"
+}
+
+Building Floor {
+  Room r01 {
+    Area: (0,0) (750,0) (750,350) (0,350)
+    Devices {
+      Light l1 on (125,175)
+      Sensor s1 on (125,175)
+      Light l2 on (375,175)
+      Sensor s2 on (375,175)
+      Light l3 on (625,175)
+      Sensor s3 on (625,175)
+    }
+  }
+  Room r02 {
+    Area: (750,0) (1500,0) (1500,350) (750,350)
+    Devices {
+      Light l1 on (875,175)
+      Sensor s1 on (875,175)
+      Light l2 on (1125,175)
+      Sensor s2 on (1125,175)
+      Light l3 on (1375,175)
+      Sensor s3 on (1375,175)
+    }
+  }
+  Room r03 {
+    Area: (0,500) (750,500) (750,850) (0,850)
+    Devices {
+      Light l1 on (125,675)
+      Sensor s1 on (125,675)
+      Light l2 on (375,675)
+      Sensor s2 on (375,675)
+      Light l3 on (625,675)
+      Sensor s3 on (625,675)
+    }
+  }
+  Room r04 {
+    Area: (750,500) (1500,500) (1500,850) (750,850)
+    Devices {
+      Light l1 on (875,675)
+      Sensor s1 on (875,675)
+      Light l2 on (1125,675)
+      Sensor s2 on (1125,675)
+      Light l3 on (1375,675)
+      Sensor s3 on (1375,675)
+    }
+  }
+  Room r05 {
+    Area: (1500,0) (2050,0) (2050,350) (1500,350)
+    Devices {
+      Light l1 on (1650,175)
+      Sensor s1 on (1650,175)
+      Light l2 on (1900,175)
+      Sensor s2 on (1900,175)
+    }
+  }
+  Room r06 {
+    Area: (1650,350) (2050,350) (2050,850) (1650,850)
+    Devices {
+      Light l1 on (1725,500)
+      Sensor s1 on (1725,500)
+      Light l2 on (1975,500)
+      Sensor s2 on (1975,500)
+      Light l3 on (1725,700)
+      Sensor s3 on (1725,700)
+      Light l4 on (1975,700)
+      Sensor s4 on (1975,700)
+    }
+  }
+  Room r07 {
+    Area: (0,850) (1500,850) (1500,2575) (0,2575)
+    Devices {
+      Light r1l1 on (150,973)
+      Sensor r1s1 on (150,973)
+      Light r1l2 on (450,973)
+      Sensor r1s2 on (450,973)
+      Light r1l3 on (750,973)
+      Sensor r1s3 on (750,973)
+      Light r1l4 on (1050,973)
+      Sensor r1s4 on (1050,973)
+      Light r1l5 on (1350,973)
+      Sensor r1s5 on (1350,973)
+      Light r2l1 on (150,1220)
+      Sensor r2s1 on (150,1220)
+      Light r2l2 on (450,1220)
+      Sensor r2s2 on (450,1220)
+      Light r2l3 on (750,1220)
+      Sensor r2s3 on (750,1220)
+      Light r2l4 on (1050,1220)
+      Sensor r2s4 on (1050,1220)
+      Light r2l5 on (1350,1220)
+      Sensor r2s5 on (1350,1220)
+      Light r3l1 on (150,1468)
+      Sensor r3s1 on (150,1468)
+      Light r3l2 on (450,1468)
+      Sensor r3s2 on (450,1468)
+      Light r3l3 on (750,1468)
+      Sensor r3s3 on (750,1468)
+      Light r3l4 on (1050,1468)
+      Sensor r3s4 on (1050,1468)
+      Light r3l5 on (1350,1468)
+      Sensor r3s5 on (1350,1468)
+      Light r4l1 on (150,1713)
+      Sensor r4s1 on (150,1713)
+      Light r4l2 on (450,1713)
+      Sensor r4s2 on (450,1713)
+      Light r4l3 on (750,1713)
+      Sensor r4s3 on (750,1713)
+      Light r4l4 on (1050,1713)
+      Sensor r4s4 on (1050,1713)
+      Light r4l5 on (1350,1713)
+      Sensor r4s5 on (1350,1713)
+      Light r5l1 on (150,1958)
+      Sensor r5s1 on (150,1958)
+      Light r5l2 on (450,1958)
+      Sensor r5s2 on (450,1958)
+      Light r5l3 on (750,1958)
+      Sensor r5s3 on (750,1958)
+      Light r5l4 on (1050,1958)
+      Sensor r5s4 on (1050,1958)
+      Light r5l5 on (1350,1958)
+      Sensor r5s5 on (1350,1958)
+      Light r6l1 on (150,2205)
+      Sensor r6s1 on (150,2205)
+      Light r6l2 on (450,2205)
+      Sensor r6s2 on (450,2205)
+      Light r6l3 on (750,2205)
+      Sensor r6s3 on (750,2205)
+      Light r6l4 on (1050,2205)
+      Sensor r6s4 on (1050,2205)
+      Light r6l5 on (1350,2205)
+      Sensor r6s5 on (1350,2205)
+      Light r7l1 on (150,2452)
+      Sensor r7s1 on (150,2452)
+      Light r7l2 on (450,2452)
+      Sensor r7s2 on (450,2452)
+      Light r7l3 on (750,2452)
+      Sensor r7s3 on (750,2452)
+      Light r7l4 on (1050,2452)
+      Sensor r7s4 on (1050,2452)
+      Light r7l5 on (1350,2452)
+      Sensor r7s5 on (1350,2452)
+    }
+  }
+  Room r08 {
+    Area: (1650,850) (2050,850) (2050,1425) (1650,1425)
+    Devices {
+      Light l1 on (1725,970)
+      Sensor s1 on (1725,970)
+      Light l2 on (1925,970)
+      Sensor s2 on (1925,970)
+      Light l3 on (1725,1137)
+      Sensor s3 on (1725,1137)
+      Light l4 on (1925,1137)
+      Sensor s4 on (1925,1137)
+      Light l5 on (1725,1305)
+      Sensor s5 on (1725,1305)
+      Light l6 on (1925,1305)
+      Sensor s6 on (1925,1305)
+    }
+  }
+  Room r09 {
+    Area: (1650,1425) (2050,1425) (2050,2000) (1650,2000)
+    Devices {
+      Light l1 on (1725,1545)
+      Sensor s1 on (1725,1545)
+      Light l2 on (1925,1545)
+      Sensor s2 on (1925,1545)
+      Light l3 on (1725,1712)
+      Sensor s3 on (1725,1712)
+      Light l4 on (1925,1712)
+      Sensor s4 on (1925,1712)
+      Light l5 on (1725,1880)
+      Sensor s5 on (1725,1880)
+      Light l6 on (1925,1880)
+      Sensor s6 on (1925,1880)
+    }
+  }
+  Room r10 {
+    Area: (1650,2000) (2050,2000) (2050,2575) (1650,2575)
+    Devices {
+      Light l1 on (1725,2120)
+      Sensor s1 on (1725,2120)
+      Light l2 on (1925,2120)
+      Sensor s2 on (1925,2120)
+      Light l3 on (1725,2287)
+      Sensor s3 on (1725,2287)
+      Light l4 on (1925,2287)
+      Sensor s4 on (1925,2287)
+      Light l5 on (1725,2455)
+      Sensor s5 on (1725,2455)
+      Light l6 on (1925,2455)
+      Sensor s6 on (1925,2455)
+    }
+  }
+  Corridor c01 {
+    Area: (0,350) (1650,350) (1650,500) (0,500)
+    Rooms: r01 r02 r03 r04 r05 r06
+    Devices {
+      Light l1 on (150,425)
+      Sensor s1 on (150,425)
+      Light l2 on (450,425)
+      Sensor s2 on (450,425)
+      Light l3 on (750,425)
+      Sensor s3 on (750,425)
+      Light l4 on (1050,425)
+      Sensor s4 on (1050,425)
+      Light l5 on (1350,425)
+      Sensor s5 on (1350,425)
+      Light l6 on (1575,425)
+      Sensor s6 on (1575,425)
+    }
+  }
+  Corridor c02 {
+    Area: (1500,350) (1650,350) (1650,2575) (1500,2575)
+    Rooms: r04 r05 r06 r07 r08 r09
+    Devices {
+      Light l1 on (1575,425)
+      Sensor s1 on (1575,425)
+      Light l2 on (1575,650)
+      Sensor s2 on (1575,650)
+      Light l3 on (1575,950)
+      Sensor s3 on (1575,950)
+      Light l4 on (1575,1250)
+      Sensor s4 on (1575,1250)
+      Light l5 on (1575,1550)
+      Sensor s5 on (1575,1550)
+      Light l6 on (1575,1850)
+      Sensor s6 on (1575,1850)
+      Light l7 on (1575,2150)
+      Sensor s7 on (1575,2150)
+      Light l8 on (1575,2450)
+      Sensor s8 on (1575,2450)
+    }
+  }
+  
+  Scenarios {
+    Scenario WorkDay for Actor 0 {
+            (0,425)       // Enter (08:30)
+      [10]  (220, 425)
+      [10]  (1250, 425)
+      [5]   (850, 600)    // @desk r04 (08:30)
+      [90]  (1540, 400)   // @coffee (8:32)
+      [60]  (850, 600)    // @desk (8:33)
+      [600] (1250,425)
+      [5]   (1575, 425)
+      [15]  (1575, 1230)
+      [5]   (1800, 1000)  // Daily stand-up r08 (09:00)
+      [300] (1575, 1230)  // Stand-up finished (09:15)
+      [10]  (1540, 400)   // @coffee (09:15)
+      [50]  (850, 600)    // @desk (09:16)
+      [5400](1540, 400)   // @coffee (10:46)
+      [45]  (850, 600)    // @desk (10:47)
+      [2580](1540, 400)   // @coffee (11:30)
+      [50]  (500, 425)
+      [5]   200, 200)     // Meeting r01 (11:31)
+      [2700](500, 425)    // Corridor (12:16)
+      [10]  (850, 600)    // @desk (getting food) (12:16)
+      [30]  (1540, 400)   // @coffee (12:17)
+      [55]  (1575, 1800)  // Corridor (12:18)
+      [10]  (1250, 1800)
+      [25]  (500, 550)    // Lunch r07 (12:19)
+      [1740](1250, 1800)  // Exit lunch (12:48)
+      [10]  (1250, 1800)
+      [15]  (1540, 400)   // @coffee (12:48)
+      [55]  (850, 600)    // @desk (12:49)
+      [1200](750, 425)    // Corridor (13:09)
+      [15]  (500, 550)    // Question r03
+      [120] (750,425)     // Corridor (13:11)
+      [10]  (850, 600)    // @desk (13:11)
+      [2700](1540, 400)   // @coffee (13:56)
+      [30]  (850, 600)    // @desk (13:57)
+      [5400](1250, 425)   // Corridor (15:27)
+      [5]   (1250, 350)   // Fetching r02 (15:27)
+      [10]  (1540, 400)   // @coffee (15:27)
+      [40]  (1575, 700)
+      [15]  (1850, 650)   // Meeting r06 (15:28)
+      [1770](1575, 700)   // Corridor (15:57)
+      [20]  (1250, 425)
+      [15]  (850, 600)    // @desk (15:58)
+      [3720](1250, 425)
+      [10]  (500, 425)
+      [5]   (0, 425)
+    }
+  }
+}

@@ -1,0 +1,55 @@
+//
+// Copyright (c) Thomas Nägele and contributors. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+//
+
+process class BasicRoomController(ActiveHoldTime, ActiveLevel, VacantHoldTime, VacantLevel, Frequency : Real)
+ports
+messages
+variables
+  activity : Boolean
+  setpoint : Real
+init
+  Init()()
+methods
+  Init()()
+    activity := false;
+    setpoint := 0.0;
+    par Off()() and proceed()() rap
+  
+  Off()()
+    setpoint := 0.0;
+    delay 0.1;
+    [activity] On()()
+  
+  On()()
+    setpoint := ActiveLevel;
+    delay 0.01;
+    [!activity]
+    abort
+      delay ActiveHoldTime;
+      Vacant()()
+    with (
+      [activity]
+      On()()
+    )
+    
+  Vacant()()
+    setpoint := VacantLevel;
+    delay 0.01;
+    abort
+      delay VacantHoldTime;
+      Off()()
+    with (
+      [activity]
+      On()()
+    )
+  
+  proceed()()
+    delay Frequency;
+    proceed()()
+  
+system
+instances
+  controller : BasicRoomController(ActiveHoldTime := 300.0, ActiveLevel := 100.0, VacantHoldTime := 180.0, VacantLevel := 50.0, Frequency := 60.0)
+channels

@@ -1,0 +1,38 @@
+//
+// Copyright (c) Thomas Nägele and contributors. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+//
+
+process class Actor(Interval, Duration : Real)
+ports
+  port
+messages
+  port!motion(Boolean)
+variables
+  moving : Boolean
+  interval, duration : Real
+init
+  init()()
+methods
+  init()()
+    moving := false;
+    if interval == nil then interval := Interval fi;
+    if duration == nil then duration := Duration fi;
+    par run()() and handleComm(moving)() rap
+  
+  run()()
+    moving := true;
+    delay interval;
+    moving := false;
+    delay duration;
+    run()()
+  
+  handleComm(startState : Boolean)()
+    [moving != startState]
+    port!motion(moving);
+    handleComm(moving)()
+    
+system
+instances
+  actor : Actor(Interval := 1200.0, Duration := 180.0)
+channels

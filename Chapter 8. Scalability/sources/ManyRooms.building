@@ -1,0 +1,242 @@
+//
+// Copyright (c) Thomas Nägele and contributors. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for details.
+//
+
+Configuration {
+  #Actors: 1
+  OccupancySensorRanges: 150
+  MeasureTime: 600
+  HideSensorRange
+  Distributions: 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+//  SeparateClasses
+//  SeparateActors
+  ModelDir: "../../../models"
+}
+
+Building ManyRooms {
+  Room r01 {
+    Area: (0, 0) (600, 0) (600, 600) (0, 600)
+    Devices {
+      Light l1 on (150, 150)
+      Sensor s1 on (150, 150)
+      Light l2 on (450, 150)
+          Sensor s2 on (450, 150)
+      Light l3 on (150, 450)
+      Sensor s3 on (150, 450)
+      Light l4 on (450, 450)
+      Sensor s4 on (450, 450)
+    }
+  }
+  Room r02 {
+    Area: (600, 0) (1200, 0) (1200, 600) (600, 600)
+    Devices {
+      Light l1 on (750, 150)
+      Sensor s1 on (750, 150)
+      Light l2 on (1050, 150)
+      Sensor s2 on (1050, 150)
+      Light l3 on (750, 450)
+      Sensor s3 on (750, 450)
+      Light l4 on (1050, 450)
+      Sensor s4 on (1050, 450)
+    }
+  }
+  Room r03 {
+    Area: (1200, 0) (1800, 0) (1800, 600) (1200, 600)
+    Devices {
+      Light l1 on (1350, 150)
+      Sensor s1 on (1350, 150)
+      Light l2 on (1650, 150)
+      Sensor s2 on (1650, 150)
+      Light l3 on (1350, 450)
+      Sensor s3 on (1350, 450)
+      Light l4 on (1650, 450)
+      Sensor s4 on (1650, 450)
+    }
+  }
+  Room r04 {
+    Area: (1800, 0) (2400, 0) (2400, 600) (1800, 600)
+    Devices {
+      Light l1 on (1950, 150)
+      Sensor s1 on (1950, 150)
+      Light l2 on (2250, 150)
+      Sensor s2 on (2250, 150)
+      Light l3 on (1950, 450)
+      Sensor s3 on (1950, 450)
+      Light l4 on (2250, 450)
+      Sensor s4 on (2250, 450)
+    }
+  }
+  Room r05 {
+    Area: (0, 600) (600, 600) (600, 1200) (0, 1200)
+    Devices {
+      Light l1 on (150, 750)
+      Sensor s1 on (150, 750)
+      Light l2 on (450, 750)
+      Sensor s2 on (450, 750)
+      Light l3 on (150, 1050)
+      Sensor s3 on (150, 1050)
+      Light l4 on (450, 1050)
+      Sensor s4 on (450, 1050)
+    }
+  }
+  Room r06 {
+    Area: (600, 600) (1200, 600) (1200, 1200) (600, 1200)
+    Devices {
+      Light l1 on (750, 750)
+      Sensor s1 on (750, 750)
+      Light l2 on (1050, 750)
+      Sensor s2 on (1050, 750)
+      Light l3 on (750, 1050)
+      Sensor s3 on (750, 1050)
+      Light l4 on (1050, 1050)
+      Sensor s4 on (1050, 1050)
+    }
+  }
+  Room r07 {
+    Area: (1200, 600) (1800, 600) (1800, 1200) (1200, 1200)
+    Devices {
+      Light l1 on (1350, 750)
+      Sensor s1 on (1350, 750)
+      Light l2 on (1650, 750)
+      Sensor s2 on (1650, 750)
+      Light l3 on (1350, 1050)
+      Sensor s3 on (1350, 1050)
+      Light l4 on (1650, 1050)
+      Sensor s4 on (1650, 1050)
+    }
+  }
+  Room r08 {
+    Area: (1800, 600) (2400, 600) (2400, 1200) (1800, 1200)
+    Devices {
+      Light l1 on (1950, 750)
+      Sensor s1 on (1950, 750)
+      Light l2 on (2250, 750)
+      Sensor s2 on (2250, 750)
+      Light l3 on (1950, 1050)
+      Sensor s3 on (1950, 1050)
+      Light l4 on (2250, 1050)
+      Sensor s4 on (2250, 1050)
+    }
+  }
+  Room r09 {
+    Area: (0, 1200) (600, 1200) (600, 1800) (0, 1800)
+    Devices {
+      Light l1 on (150, 1350)
+      Sensor s1 on (150, 1350)
+      Light l2 on (450, 1350)
+      Sensor s2 on (450, 1350)
+      Light l3 on (150, 1650)
+      Sensor s3 on (150, 1650)
+      Light l4 on (450, 1650)
+      Sensor s4 on (450, 1650)
+    }
+  }
+  Room r10 {
+    Area: (600, 1200) (1200, 1200) (1200, 1800) (600, 1800)
+    Devices {
+      Light l1 on (750, 1350)
+      Sensor s1 on (750, 1350)
+      Light l2 on (1050, 1350)
+      Sensor s2 on (1050, 1350)
+      Light l3 on (750, 1650)
+      Sensor s3 on (750, 1650)
+      Light l4 on (1050, 1650)
+      Sensor s4 on (1050, 1650)
+    }
+  }
+  Room r11 {
+    Area: (1200, 1200) (1800, 1200) (1800, 1800) (1200, 1800)
+    Devices {
+      Light l1 on (1350, 1350)
+      Sensor s1 on (1350, 1350)
+      Light l2 on (1650, 1350)
+      Sensor s2 on (1650, 1350)
+      Light l3 on (1350, 1650)
+      Sensor s3 on (1350, 1650)
+      Light l4 on (1650, 1650)
+      Sensor s4 on (1650, 1650)
+    }
+  }
+  Room r12 {
+    Area: (1800, 1200) (2400, 1200) (2400, 1800) (1800, 1800)
+    Devices {
+      Light l1 on (1950, 1350)
+      Sensor s1 on (1950, 1350)
+      Light l2 on (2250, 1350)
+      Sensor s2 on (2250, 1350)
+      Light l3 on (1950, 1650)
+      Sensor s3 on (1950, 1650)
+      Light l4 on (2250, 1650)
+      Sensor s4 on (2250, 1650)
+    }
+  }
+  Room r13 {
+    Area: (0, 1800) (600, 1800) (600, 2400) (0, 2400)
+    Devices {
+      Light l1 on (150, 1950)
+      Sensor s1 on (150, 1950)
+      Light l2 on (450, 1950)
+      Sensor s2 on (450, 1950)
+      Light l3 on (150, 2250)
+      Sensor s3 on (150, 2250)
+      Light l4 on (450, 2250)
+      Sensor s4 on (450, 2250)
+    }
+  }
+  Room r14 {
+    Area: (600, 1800) (1200, 1800) (1200, 2400) (600, 2400)
+    Devices {
+      Light l1 on (750, 1950)
+      Sensor s1 on (750, 1950)
+      Light l2 on (1050, 1950)
+      Sensor s2 on (1050, 1950)
+      Light l3 on (750, 2250)
+      Sensor s3 on (750, 2250)
+      Light l4 on (1050, 2250)
+      Sensor s4 on (1050, 2250)
+    }
+  }
+  Room r15 {
+    Area: (1200, 1800) (1800, 1800) (1800, 2400) (1200, 2400)
+    Devices {
+      Light l1 on (1350, 1950)
+      Sensor s1 on (1350, 1950)
+      Light l2 on (1650, 1950)
+      Sensor s2 on (1650, 1950)
+      Light l3 on (1350, 2250)
+      Sensor s3 on (1350, 2250)
+      Light l4 on (1650, 2250)
+      Sensor s4 on (1650, 2250)
+    }
+  }
+  Room r16 {
+    Area: (1800, 1800) (2400, 1800) (2400, 2400) (1800, 2400)
+    Devices {
+      Light l1 on (1950, 1950)
+      Sensor s1 on (1950, 1950)
+      Light l2 on (2250, 1950)
+      Sensor s2 on (2250, 1950)
+      Light l3 on (1950, 2250)
+      Sensor s3 on (1950, 2250)
+      Light l4 on (2250, 2250)
+      Sensor s4 on (2250, 2250)
+    }
+  }
+  
+  Scenarios {
+      Scenario BasicWalk for Actor 0 {
+        Interpolate 10
+              (0, 300)
+        [60]  (2250, 300)
+        [60]  (2250, 2250)
+        [60]  (150, 2250)
+        [240] (150, 2250)
+        [30]  (1800, 900)
+        [240] (1800, 900)
+        [30]  (300, 900)
+        [300] (300, 900)
+        [30]  (0, 300)
+      }
+  }
+}
