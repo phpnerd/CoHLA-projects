@@ -1,0 +1,324 @@
+====== CONFIGURATION 0.5_0.1_0.1_ComfyBase =======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.5
+KitchenKitchen.radiatorSize           : 0.1
+HallHall.radiatorSize                 : 0.1
+========             RESULTS              ========
+errHall                               : -1.012203
+errKitchen                            : 0.561123
+errLivingroom                         : -0.098082
+==================================================
+
+===== CONFIGURATION 0.5_0.1_0.125_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.5
+KitchenKitchen.radiatorSize           : 0.1
+HallHall.radiatorSize                 : 0.125
+========             RESULTS              ========
+errHall                               : 0.512460
+errKitchen                            : 0.561123
+errLivingroom                         : -0.098082
+==================================================
+
+====== CONFIGURATION 0.5_0.1_0.15_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.5
+KitchenKitchen.radiatorSize           : 0.1
+HallHall.radiatorSize                 : 0.15
+========             RESULTS              ========
+errHall                               : 1.807239
+errKitchen                            : 0.561123
+errLivingroom                         : -0.098082
+==================================================
+
+====== CONFIGURATION 0.5_0.25_0.1_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.5
+KitchenKitchen.radiatorSize           : 0.25
+HallHall.radiatorSize                 : 0.1
+========             RESULTS              ========
+errHall                               : -1.012203
+errKitchen                            : 6.999858
+errLivingroom                         : -0.098082
+==================================================
+
+===== CONFIGURATION 0.5_0.25_0.125_ComfyBase =====
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.5
+KitchenKitchen.radiatorSize           : 0.25
+HallHall.radiatorSize                 : 0.125
+========             RESULTS              ========
+errHall                               : 0.512460
+errKitchen                            : 6.999858
+errLivingroom                         : -0.098082
+==================================================
+
+===== CONFIGURATION 0.5_0.25_0.15_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.5
+KitchenKitchen.radiatorSize           : 0.25
+HallHall.radiatorSize                 : 0.15
+========             RESULTS              ========
+errHall                               : 1.807239
+errKitchen                            : 6.999858
+errLivingroom                         : -0.098082
+==================================================
+
+====== CONFIGURATION 0.5_0.4_0.1_ComfyBase =======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.5
+KitchenKitchen.radiatorSize           : 0.4
+HallHall.radiatorSize                 : 0.1
+========             RESULTS              ========
+errHall                               : -1.012203
+errKitchen                            : 9.918100
+errLivingroom                         : -0.098082
+==================================================
+
+===== CONFIGURATION 0.5_0.4_0.125_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.5
+KitchenKitchen.radiatorSize           : 0.4
+HallHall.radiatorSize                 : 0.125
+========             RESULTS              ========
+errHall                               : 0.512460
+errKitchen                            : 9.918100
+errLivingroom                         : -0.098082
+==================================================
+
+====== CONFIGURATION 0.5_0.4_0.15_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.5
+KitchenKitchen.radiatorSize           : 0.4
+HallHall.radiatorSize                 : 0.15
+========             RESULTS              ========
+errHall                               : 1.807239
+errKitchen                            : 9.918100
+errLivingroom                         : -0.098082
+==================================================
+
+====== CONFIGURATION 0.75_0.1_0.1_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.75
+KitchenKitchen.radiatorSize           : 0.1
+HallHall.radiatorSize                 : 0.1
+========             RESULTS              ========
+errHall                               : -3.066781
+errKitchen                            : -1.757157
+errLivingroom                         : -0.028548
+==================================================
+
+===== CONFIGURATION 0.75_0.1_0.125_ComfyBase =====
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.75
+KitchenKitchen.radiatorSize           : 0.1
+HallHall.radiatorSize                 : 0.125
+========             RESULTS              ========
+errHall                               : -1.846161
+errKitchen                            : -1.757157
+errLivingroom                         : -0.028548
+==================================================
+
+===== CONFIGURATION 0.75_0.1_0.15_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.75
+KitchenKitchen.radiatorSize           : 0.1
+HallHall.radiatorSize                 : 0.15
+========             RESULTS              ========
+errHall                               : -0.809563
+errKitchen                            : -1.757157
+errLivingroom                         : -0.028548
+==================================================
+
+===== CONFIGURATION 0.75_0.25_0.1_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.75
+KitchenKitchen.radiatorSize           : 0.25
+HallHall.radiatorSize                 : 0.1
+========             RESULTS              ========
+errHall                               : -3.066781
+errKitchen                            : 3.377993
+errLivingroom                         : -0.028548
+==================================================
+
+==== CONFIGURATION 0.75_0.25_0.125_ComfyBase =====
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.75
+KitchenKitchen.radiatorSize           : 0.25
+HallHall.radiatorSize                 : 0.125
+========             RESULTS              ========
+errHall                               : -1.846161
+errKitchen                            : 3.377993
+errLivingroom                         : -0.028548
+==================================================
+
+===== CONFIGURATION 0.75_0.25_0.15_ComfyBase =====
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.75
+KitchenKitchen.radiatorSize           : 0.25
+HallHall.radiatorSize                 : 0.15
+========             RESULTS              ========
+errHall                               : -0.809563
+errKitchen                            : 3.377993
+errLivingroom                         : -0.028548
+==================================================
+
+====== CONFIGURATION 0.75_0.4_0.1_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.75
+KitchenKitchen.radiatorSize           : 0.4
+HallHall.radiatorSize                 : 0.1
+========             RESULTS              ========
+errHall                               : -3.066781
+errKitchen                            : 5.706533
+errLivingroom                         : -0.028548
+==================================================
+
+===== CONFIGURATION 0.75_0.4_0.125_ComfyBase =====
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.75
+KitchenKitchen.radiatorSize           : 0.4
+HallHall.radiatorSize                 : 0.125
+========             RESULTS              ========
+errHall                               : -1.846161
+errKitchen                            : 5.706533
+errLivingroom                         : -0.028548
+==================================================
+
+===== CONFIGURATION 0.75_0.4_0.15_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 0.75
+KitchenKitchen.radiatorSize           : 0.4
+HallHall.radiatorSize                 : 0.15
+========             RESULTS              ========
+errHall                               : -0.809563
+errKitchen                            : 5.706533
+errLivingroom                         : -0.028548
+==================================================
+
+====== CONFIGURATION 1.0_0.1_0.1_ComfyBase =======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 1.0
+KitchenKitchen.radiatorSize           : 0.1
+HallHall.radiatorSize                 : 0.1
+========             RESULTS              ========
+errHall                               : -4.114218
+errKitchen                            : -2.938779
+errLivingroom                         : -0.009583
+==================================================
+
+===== CONFIGURATION 1.0_0.1_0.125_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 1.0
+KitchenKitchen.radiatorSize           : 0.1
+HallHall.radiatorSize                 : 0.125
+========             RESULTS              ========
+errHall                               : -3.048572
+errKitchen                            : -2.938779
+errLivingroom                         : -0.009583
+==================================================
+
+====== CONFIGURATION 1.0_0.1_0.15_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 1.0
+KitchenKitchen.radiatorSize           : 0.1
+HallHall.radiatorSize                 : 0.15
+========             RESULTS              ========
+errHall                               : -2.143560
+errKitchen                            : -2.938779
+errLivingroom                         : -0.009583
+==================================================
+
+====== CONFIGURATION 1.0_0.25_0.1_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 1.0
+KitchenKitchen.radiatorSize           : 0.25
+HallHall.radiatorSize                 : 0.1
+========             RESULTS              ========
+errHall                               : -4.114218
+errKitchen                            : 1.531470
+errLivingroom                         : -0.009583
+==================================================
+
+===== CONFIGURATION 1.0_0.25_0.125_ComfyBase =====
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 1.0
+KitchenKitchen.radiatorSize           : 0.25
+HallHall.radiatorSize                 : 0.125
+========             RESULTS              ========
+errHall                               : -3.048572
+errKitchen                            : 1.531470
+errLivingroom                         : -0.009583
+==================================================
+
+===== CONFIGURATION 1.0_0.25_0.15_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 1.0
+KitchenKitchen.radiatorSize           : 0.25
+HallHall.radiatorSize                 : 0.15
+========             RESULTS              ========
+errHall                               : -2.143560
+errKitchen                            : 1.531470
+errLivingroom                         : -0.009583
+==================================================
+
+====== CONFIGURATION 1.0_0.4_0.1_ComfyBase =======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 1.0
+KitchenKitchen.radiatorSize           : 0.4
+HallHall.radiatorSize                 : 0.1
+========             RESULTS              ========
+errHall                               : -4.114218
+errKitchen                            : 3.559382
+errLivingroom                         : -0.009583
+==================================================
+
+===== CONFIGURATION 1.0_0.4_0.125_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 1.0
+KitchenKitchen.radiatorSize           : 0.4
+HallHall.radiatorSize                 : 0.125
+========             RESULTS              ========
+errHall                               : -3.048572
+errKitchen                            : 3.559382
+errLivingroom                         : -0.009583
+==================================================
+
+====== CONFIGURATION 1.0_0.4_0.15_ComfyBase ======
+========            PARAMETERS            ========
+Situation                             : ComfyBase
+LivingroomLivingroom.radiatorSize     : 1.0
+KitchenKitchen.radiatorSize           : 0.4
+HallHall.radiatorSize                 : 0.15
+========             RESULTS              ========
+errHall                               : -2.143560
+errKitchen                            : 3.559382
+errLivingroom                         : -0.009583
+==================================================
+
