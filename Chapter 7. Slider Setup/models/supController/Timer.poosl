@@ -1,0 +1,49 @@
+process class Timer(interval : Real)
+ports
+	ps
+messages
+	ps?Start
+	ps?GetInterval
+	ps?SetInterval(Real)
+	ps?Stop
+	ps!Tick
+	ps!Interval(Real)
+variables
+	running : Boolean
+init
+	Init()()
+methods
+	Init()()
+		par Idle()() and Listen()() rap
+	
+	Idle()()
+		running := false;
+		ps?Start;
+		Run()()
+	
+	Run()()
+		running := true;
+		abort (
+			delay interval;
+			ps!Tick;
+			Run()()
+		) with (
+			ps?Stop;
+			Idle()()
+		)
+	
+	Listen()() | i : Real |
+		sel
+			ps?SetInterval(i);
+			interval := i
+		or
+			ps?GetInterval;
+			ps!Interval(interval)
+		or
+			[running]
+			ps?Start
+		or
+			[!running]
+			ps?Stop
+		les;
+		Listen()()

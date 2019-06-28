@@ -1,0 +1,265 @@
+Environment {
+  RTI { 
+    OpenRTI
+    Libraries "/opt/OpenRTI-libs"
+  }
+  PublishOnlyChanges
+}
+
+FederateClass Axis {
+  Type FMU
+  Attributes {
+    Input Boolean enable
+    Input Real motor
+    Output Real encoder
+    Output Real position
+  }
+  Parameters {
+    Real I1I "I1.i"
+    Real MaxmiumDistance "Maxmium.distance"
+    Real Motor_driverGain1K "Motor_driver.Gain1.K"
+    Real Motor_mechanicsGYR "Motor_mechanics.GY.r"
+    Real Motor_mechanicsII "Motor_mechanics.I.i"
+    Real Motor_mechanicsRR "Motor_mechanics.R.r"
+    Real R1R "R1.r"
+    Real R2R "R2.r"
+    Real Rad_to_rotK "rad_to_rot.K"
+    Real TFR "TF.r"
+    Real Angle_rawInitial "angle_raw.initial"
+    Real Encoder_rawInitial "encoder_raw.initial"
+    Real I1State_initial "I1.state_initial"
+    Real Motor_mechanicsIState_initial "Motor_mechanics.I.state_initial"
+    Real Position_realInitial "position_real.initial"
+  }
+  DefaultModel "../../models/SliderAxis_nolimit.fmu"
+  DefaultStepSize 0.0005
+  DefaultLookahead 0.0001
+}
+
+FederateClass Controller {
+  Type FMU
+  Attributes {
+    Input Real encoder
+    Input Integer mode
+    Input Real setpoint
+    Input Real stroketime
+    Output Real voltage
+    Output Real encoder_position
+  }
+  Parameters {
+    Real Acceleration_gainK "acceleration_gain.K"
+    Real ConstantC "Constant.C"
+    Real Controller1K "Controller1.K"
+    Real Controller1Td "Controller1.Td"
+    Real Controller1N "Controller1.N"
+    Real Controller1Ti "Controller1.Ti"
+    Real Controller1Imax "Controller1.Imax"
+    Real DiscreteIntegralInitial "DiscreteIntegral.initial"
+    Real Encoder_to_total1Offset "Encoder_to_total1.offset"
+    Real GainThreshold "Gain.threshold"
+    Real Gain1K "Gain1.K"
+    Real Gain5K "Gain5.K"
+    Real Mode_offsetC "mode_offset.C"
+    Real MotionProfile2CV "MotionProfile2.CV"
+    Real Setpoint_offsetC "setpoint_offset.C"
+    Real SignalLimiter2Maximum "SignalLimiter2.maximum"
+    Real SignalLimiter2Minimum "SignalLimiter2.minimum"
+    Real SVF_gainK "SVF_gain.K"
+    Real Velocity_controllerK "Velocity_controller.K"
+    Real Velocity_controllerTi "Velocity_controller.Ti"
+    Real Velocity_controllerB "Velocity_controller.b"
+    Real Velocity_controllerTa "Velocity_controller.Ta"
+    Real Velocity_controllerMinimum "Velocity_controller.minimum"
+    Real Velocity_controllerMaximum "Velocity_controller.maximum"
+    Real Velocity_gainK "velocity_gain.K"
+    Real Velocity_gain1K "velocity_gain1.K"
+    Real Controller1UD_previous_initial "Controller1.uD_previous_initial"
+    Real Controller1Error_previous_initial "Controller1.error_previous_initial"
+    Real Controller1UI_previous_initial "Controller1.uI_previous_initial"
+    Real Controller1UI_previous1_initial "Controller1.uI_previous1_initial"
+    Real Controller1UI_previous2_initial "Controller1.uI_previous2_initial"
+    Real DiscreteIntegralTotal_initial "DiscreteIntegral.total_initial"
+    Real U_1_initial "u_1_initial"
+    Real U_2_initial "u_2_initial"
+    Real Velocity_controllerUI_previous_initial "Velocity_controller.uI_previous_initial"
+    Real Velocity_controllerUI_previous1_initial "Velocity_controller.uI_previous1_initial"
+  }
+  DefaultModel "../../models/SliderController_nolimit.fmu"
+  DefaultStepSize 0.005
+  DefaultLookahead 0.001
+}
+
+FederateClass SupervisoryController {
+  Type POOSL {
+    Processes {
+      supController in "supervisoryController"
+    }
+  }
+  Attributes {
+    Input Real topPosition in supController as "topPosition"
+    Output Integer topMode in supController as "topMode"
+    Output Real topSetpoint in supController as "topSetpoint"
+    Output Real topStrokeTime in supController as "topStrokeTime"
+    Output Boolean topEnable in supController as "topEnable"
+    
+    Input Real bottomPosition in supController as "bottomPosition"
+    Output Integer bottomMode in supController as "bottomMode"
+    Output Real bottomSetpoint in supController as "bottomSetpoint"
+    Output Real bottomStrokeTime in supController as "bottomStrokeTime"
+    Output Boolean bottomEnable in supController as "bottomEnable"
+    
+    Output Boolean initialised in supController as "initialised"
+  }
+  Parameters {
+    Integer autoInit "AutoInit" in supController
+    Real initSpeed "InitSpeed" in supController
+    Integer initMode "InitMode" in supController
+    Real crossTopPosition "InitCrossTopPosition" in supController
+    Real crossBottomPosition "InitCrossBottomPosition" in supController
+    Real crossTopSpeed "InitCrossTopSpeed" in supController
+    Real crossBottomSpeed "InitCrossBottomSpeed" in supController
+  }
+  DefaultModel "../../models/supController/sliders.poosl"
+  DefaultLookahead 0.001
+}
+
+FederateClass CollisionDetector {
+  Type BulletCollision
+  Attributes {
+    Input Real topSliderPosition as "axis1"
+    Input Real bottomSliderPosition as "axis2"
+    Output Integer [Collision] collisions
+    Output Boolean [Collision] hasCollisions
+  }
+  DefaultModel "../../models/slider.json"
+  DefaultLookahead 0.00001
+}
+
+FederateClass Logger {
+  Type CSV-logger {
+    DefaultMeasureTime 300.0
+  }
+}
+
+Configuration onLimit for Axis {
+  Position_realInitial = "0.08"
+}
+
+Configuration onZero for Axis {
+  Position_realInitial = "0.0"
+}
+
+Configuration customMP for Controller {
+  Controller1K = "500.0"
+  Controller1Td = "0.001"
+  Controller1N = "400.0"
+  Controller1Ti = "0.286"
+}
+
+Federation SliderSetup {
+  Instances {
+    bottomAxis : Axis
+    topAxis : Axis
+    bottomController : Controller
+    topController : Controller
+    supController : SupervisoryController
+    collisionDetector : CollisionDetector
+    logger : Logger
+  }
+  
+  Connections {
+    { bottomController.encoder <- bottomAxis.encoder }
+    { bottomAxis.motor <- bottomController.voltage }
+    { supController.bottomPosition <- bottomController.encoder_position }
+    { bottomAxis.enable <- supController.bottomEnable }
+    { bottomController.mode <- supController.bottomMode }
+    { bottomController.setpoint <- supController.bottomSetpoint }
+    { bottomController.stroketime <- supController.bottomStrokeTime }
+    
+    { topController.encoder <- topAxis.encoder }
+    { topAxis.motor <- topController.voltage }
+    { supController.topPosition <- topController.encoder_position }
+    { topAxis.enable <- supController.topEnable }
+    { topController.mode <- supController.topMode }
+    { topController.setpoint <- supController.topSetpoint }
+    { topController.stroketime <- supController.topStrokeTime }
+    
+    { collisionDetector.bottomSliderPosition <- bottomAxis.position }
+    { collisionDetector.topSliderPosition <- topAxis.position }
+    
+    { logger <- 
+      bottomController.encoder_position 
+      ,topController.encoder_position
+      ,bottomAxis.position
+      ,topAxis.position
+      ,collisionDetector.hasCollisions
+      ,supController.topSetpoint
+      ,supController.bottomSetpoint
+    }
+  }
+  
+  Situation customMPs {
+    Apply customMP to bottomController
+    Apply customMP to topController
+    Apply onLimit to topAxis
+  }
+  Situation fastInitCustom {
+    Apply customMP to bottomController
+    Apply customMP to topController
+    Apply onLimit to topAxis
+    Apply onLimit to bottomAxis
+  }
+  Situation onZero {
+    Apply onZero to topAxis
+    Apply onZero to bottomAxis
+  }
+  
+  DSE strokeStartPositions {
+    SweepMode Independent
+    Situations : customMPs
+    Set supController.autoInit : "1"
+    Set supController.initMode : "0"
+    Set bottomAxis.Position_realInitial :  "0.15", "0.05", "-0.05", "-0.14"
+    Set topAxis.Position_realInitial :  "0.15", "0.05", "-0.05", "-0.14"
+    Set supController.initSpeed : "1.0", "1.5", "2.0", "2.5", "3.0"
+  }
+  DSE fastStartPositions {
+    SweepMode Independent
+    Situations : customMPs
+    Set supController.autoInit : "1"
+    Set supController.initMode : "1"
+    Set bottomAxis.Position_realInitial :  "0.15", "0.05", "-0.05", "-0.14"
+    Set topAxis.Position_realInitial :  "0.15", "0.05", "-0.05", "-0.14"
+  }
+  DSE speedStartPositions {
+    SweepMode Independent
+    Situations : customMPs
+    Set supController.autoInit : "1"
+    Set supController.initMode : "2"
+    Set bottomAxis.Position_realInitial : "0.15", "0.05", "-0.05", "-0.14"
+    Set topAxis.Position_realInitial :  "0.15", "0.05", "-0.05", "-0.14"
+    Set supController.initSpeed : "0.02", "0.04", "0.06", "0.08", "0.1", "0.12", "0.14", "0.16", "0.18", "0.2"
+  }
+  DSE crossCollision {
+    SweepMode Independent
+    Situations : fastInitCustom
+    Set supController.autoInit : "1"
+    Set supController.crossTopPosition : "0.05"
+    Set supController.crossBottomPosition : "0.05"
+    Set supController.crossTopSpeed : "0.05"
+    Set supController.crossBottomSpeed : "0.1"
+  }
+  
+  MetricSet Initialisation {
+    MeasureTime: 30.0
+    Metric InitialisationTime as Timer for supController.initialised == true (EndCondition)
+    Metric MinBottomPosition as Minimum of bottomAxis.position
+    Metric MinTopPosition as Minimum of topAxis.position
+  }
+  MetricSet NoCollision {
+    MeasureTime: 5.0
+    Metric collisionTime as Timer for collisionDetector.hasCollisions == true (EndCondition)
+    Metric topEndPosition as EndValue topAxis.position
+    Metric bottomEndPosition as EndValue bottomAxis.position
+  }
+}

@@ -1,0 +1,85 @@
+{
+	"states":[ "axis1", "axis2" ],
+	"viewpoint": {
+		"position": [ 0, 10, 1000 ],
+		"lookAt": [ 0, 0, 0 ]
+	},
+	"bodies": {
+	  "bottomSlider": {
+		  "meshes": {
+		    "carriage": {
+			    "type": "stl",
+			    "file": "../../models/Double_slider_simplified_bottom_carriage.STL",
+			    "collider": false,
+			    "render": true,
+			    "offset": [0,0,0]
+		    },
+		    "rod": {
+				  "type": "stl",
+				  "file": "../../models/Double_slider_bottom_rod.STL",
+				  "collider": true,
+				  "render": false,
+				  "offset": [0,0,0]
+			  }
+		  },
+		  "transforms": [
+				  {
+					  "origin": [1000,0,0],
+					  "rotation": [0,0,0],
+					  "state": "axis2"
+				  }, {
+					  "origin": [0,0,0],
+					  "rotation": [0,0,0],
+					  "state": ""
+				  }
+			  ]
+	  },
+		"topSlider": {
+		  "meshes": {
+		    "carriage": {
+			    "type": "stl",
+			    "file": "../../models/Double_slider_simplified_top_carriage.STL",
+			    "collider": false,
+			    "render": true,
+			    "offset": [0,0,0]
+			  },
+			  "rod": {
+				  "type": "stl",
+				  "file": "../../models/Double_slider_top_rod.STL",
+				  "collider": true,
+				  "render": false,
+				  "offset": [0,0,0]
+			  }
+		  },
+		  "transforms": [
+			  {
+				  "origin": [0.0,0,1000],
+				  "rotation": [0,0,0],
+				  "state": "axis1"
+			  }, {
+				  "origin": [0,0,20],
+				  "rotation": [0,0,0],
+				  "state": ""
+			  }
+		  ]
+	  },
+		"frame": {
+			"meshes": {
+			  "frame": {
+				  "type": "stl",
+				  "file": "../../models/Double_slider_simplified_frame.STL",
+				  "collider":false,
+				  "render":true,
+				  "offset":[0,0,0]
+			  }
+		  },
+			"transforms": [
+				{
+					"origin": [0,0,0],
+					"rotation": [0,0,0],
+					"state": ""
+				}
+			]
+		}
+	}
+}

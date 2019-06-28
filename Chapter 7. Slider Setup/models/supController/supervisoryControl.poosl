@@ -1,0 +1,378 @@
+import "lib/interface.poosl"
+
+process class SupervisoryController(speed, error : Real)
+ports
+	ui
+	statusTimer
+	runTimer
+	orbitTimer
+messages
+	ui?Initialise(Integer, Sequence)
+	ui?MoveToPosition(Integer, Sequence)
+	ui?Stop
+	ui?MoveToPolar(Real, Real)
+	ui?Orbit(Real, Real)
+	ui?GetMovementSpeed
+	ui?SetMovementSpeed(Real)
+	ui?GetStatusInterval
+	ui?SetStatusInterval(Real)
+	ui!Ok
+	ui!Ok(Object)
+	ui!Error
+	ui!Error(Object)
+	ui!Initialised
+	ui!StateInfo(StateInfo)
+	
+	statusTimer!Start
+	statusTimer!GetInterval
+	statusTimer!SetInterval(Real)
+	statusTimer?Tick
+	statusTimer?Interval(Real)
+	runTimer!Start
+	runTimer!Stop
+	runTimer?Tick
+	orbitTimer!Start
+	orbitTimer!Stop
+	orbitTimer?Tick
+variables
+	PI : Real
+	
+	AutoInit, InitMode : Integer
+	InitSpeed : Real
+	
+	InitialisingTop, InitialisingBottom, MovingTop, MovingBottom, InitialisedTop, InitialisedBottom, PolarSet : Boolean
+	PolarAngle, PolarRadius : Real
+	
+	topMode, bottomMode : Integer
+	topPosition, bottomPosition, topSetpoint, bottomSetpoint, topStrokeTime, bottomStrokeTime : Real
+	topEnable, bottomEnable, topOnLimit, bottomOnLimit, initialised : Boolean
+init
+	init()()
+methods
+	init()()
+		PI := 3.141592;
+		InitialisingTop := false;
+		InitialisingBottom := false;
+		MovingTop := false;
+		MovingBottom := false;
+		InitialisedTop := false;
+		InitialisedBottom := false;
+		PolarSet := false;
+		topMode := 1;
+		bottomMode := 1;
+		topPosition := 0.0;
+		bottomPosition := 0.0;
+		topSetpoint := 0.0;
+		bottomSetpoint := 0.0;
+		topStrokeTime := 0.0;
+		bottomStrokeTime := 0.0;
+		topOnLimit := false;
+		bottomOnLimit := false;
+		topEnable := false;
+		bottomEnable := false;
+		initialised := false;
+		
+		if AutoInit == nil then AutoInit := 0 fi;
+		if InitMode == nil then InitMode := 2 fi;
+		if InitSpeed == nil then 
+			if InitMode = 0 then InitSpeed := 2.0 
+			else if InitMode == 2 then InitSpeed := 0.04 
+		fi fi fi;
+		
+		statusTimer!Start;
+		par
+			if AutoInit == 1 then
+				Initialise(2, new(Sequence) append(0x00) append(0x01), 0.04)()
+			fi; 
+			Idle()()
+		and
+			Status()()
+		and
+			Monitor()()
+		rap
+	
+	Idle()() | nr : Integer, axes : Sequence, r, r1, r2 : Real |
+		sel
+			ui?Initialise(nr, axes);
+			par Idle()() and Initialise(nr, axes, 0.04)() rap
+		or
+			ui?MoveToPosition(nr, axes);
+			par Idle()() and MoveToPosition(nr, axes, false)() rap
+		or
+			ui?Stop;
+			if !(MovingTop | MovingBottom) then ui!Error("Not moving")
+			else ui!Ok fi;
+			par Idle()() and Stop()() rap
+		or
+			ui?MoveToPolar(r1, r2);
+			par Idle()() and MoveToPolar(r1, r2)() rap
+		or
+			ui?Orbit(r1, r2);
+			par Idle()() and Orbit(r1, r2)() rap
+		or
+			ui?GetMovementSpeed;
+			ui!Ok(new(MovementSpeedInfo) set(speed));
+			Idle()()
+		or
+			ui?SetMovementSpeed(r);
+			speed := r;
+			ui!Ok;
+			Idle()()
+		or
+			ui?GetStatusInterval;
+			statusTimer!GetInterval;
+			statusTimer?Interval(r);
+			ui!Ok(new(StatusInterval) set(r));
+			Idle()()
+		or
+			ui?SetStatusInterval(r);
+			statusTimer!SetInterval(r);
+			ui!Ok;
+			Idle()()
+		les
+	
+	Initialise(nr : Integer, axes : Sequence, endPosition : Real)()
+		Initialise(nr, axes, endPosition, false)()
+	
+	Initialise(nr : Integer, axes : Sequence, endPosition : Real, ignoreTimers : Boolean)() | b : Boolean, axis : Integer |
+		b := true;
+		if !ignoreTimers then
+			if axes find(1, 0x00) > 0 then
+				if InitialisingTop then ui!Error("Top axis already initialising"); b := false
+				else if MovingTop then ui!Error("Top axis already moving"); b := false
+				fi fi
+			else if axes find(1, 0x01) > 0 then
+				if InitialisingBottom then ui!Error("Bottom axis already initialising"); b := false
+				else if MovingBottom then ui!Error("Bottom axis already moving"); b := false
+				fi fi
+			fi fi;
+			if b & (AutoInit == 0) then
+				ui!Ok
+			fi
+		fi;
+		if b then
+			if !ignoreTimers then
+				runTimer!Start
+			fi;
+			if nr >= 1 then
+				axis := axes at(1);
+				ModeInitialise(axis, endPosition)();
+				Initialise(nr - 1, axes removeFirst, endPosition, true)()
+			fi;
+			if !ignoreTimers then
+				if AutoInit == 0 then
+					ui!Initialised
+				fi;
+				runTimer!Stop
+			fi
+		fi;
+		initialised := InitialisedTop & InitialisedBottom
+	
+	ModeInitialise(axis : Integer, endPosition : Real)() | oldMode : Integer |
+		sel
+			[axis == 0x00]
+			InitialisingTop := true;
+			MovingTop := true;
+			oldMode := topMode;
+			topEnable := true
+		or
+			[axis == 0x01]
+			InitialisingBottom := true;
+			MovingBottom := true;
+			oldMode := bottomMode;
+			bottomEnable := true
+		les;
+		sel
+			[InitMode == 0]
+			strokeInitialise(axis)()
+		or
+			[InitMode == 1]
+			fastInitialise(axis)()
+		or
+			[InitMode == 2]
+			fixedSpeedInitialise(axis)()
+		les;
+		sel
+			[(axis == 0x00) & topOnLimit]
+			topMode := 1;
+			topSetpoint := endPosition;
+			WaitForPosition(axis)();
+			topMode := oldMode;
+			InitialisingTop := false;
+			MovingTop := false;
+			InitialisedTop := true
+		or
+			[(axis == 0x01) & bottomOnLimit]
+			bottomMode := 1;
+			bottomSetpoint := endPosition;
+			WaitForPosition(axis)();
+			bottomMode := oldMode;
+			InitialisingBottom := false;
+			MovingBottom := false;
+			InitialisedBottom := true
+		les
+	
+	fixedSpeedInitialise(axis : Integer)()
+		sel
+			[axis == 0x00]
+			topMode := 2;
+			topSetpoint := InitSpeed
+		or
+			[axis == 0x01]
+			bottomMode := 2;
+			bottomSetpoint := InitSpeed
+		les
+	
+	fastInitialise(axis : Integer)()
+		sel
+			[axis == 0x00]
+			topMode := 1;
+			topSetpoint := 0.3
+		or
+			[axis == 0x01]
+			bottomMode := 1;
+			bottomSetpoint := 0.3
+		les
+	
+	strokeInitialise(axis : Integer)()
+		sel
+			[axis = 0x00]
+			topMode := 0;
+			topSetpoint := 0.3;
+			topStrokeTime := InitSpeed
+		or
+			[axis = 0x01]
+			bottomMode := 0;
+			bottomSetpoint := 0.3;
+			bottomStrokeTime := InitSpeed
+		les
+
+	MoveToPosition(nr : Integer, axes : Sequence, ignoreTimers : Boolean)() | b : Boolean, axisInfo : AxisPositionInfo |
+		b := true;
+		if !ignoreTimers then
+			if axes find(1, 0x00) > 0 then
+				if InitialisingTop then ui!Error("Top axis is initialising"); b := false
+				else if !InitialisedTop then ui!Error("Top axis not yet initialised"); b := false
+				fi fi
+			else if axes find(1, 0x01) > 0 then
+				if InitialisingBottom then ui!Error("Bottom axis is initialising"); b := false
+				else if InitialisedBottom then ui!Error("Bottom axis not yet initialised"); b := false
+				fi fi
+			fi fi
+		fi;
+		if b then
+			if !ignoreTimers then
+				runTimer!Start
+			fi;
+			if nr >= 1 then
+				axisInfo := axes at(1);
+				par
+					MoveToPosition(axisInfo getAxis, axisInfo getPosition)()
+				and
+					MoveToPosition(nr - 1, axes removeFirst, true)()
+				rap
+			fi;
+			if !ignoreTimers then
+				runTimer!Stop
+			fi
+		fi
+	
+	MoveToPosition(axis : Integer, targetPosition : Real)()
+		sel
+			[axis = 0x00]
+			MovingTop := true;
+			topSetpoint := targetPosition;
+			WaitForPosition(axis)();
+			MovingTop := false
+		or
+			[axis = 0x01]
+			MovingBottom := true;
+			bottomSetpoint := targetPosition;
+			WaitForPosition(axis)();
+			MovingBottom := false
+		les
+	
+	MoveToPolar(angle, radius : Real)() | startPosTop, startPosBottom : Real |
+		if InitialisingTop then ui!Error("Top axis is initialising")
+		else if InitialisingBottom then ui!Error("Bottom axis is initialising")
+		else if !InitialisedTop then ui!Error("Top axis not yet initialised")
+		else if !InitialisedBottom then ui!Error("Bottom axis not yet initialised")
+		else
+			ui!Ok;
+			startPosTop := ((PI / 180.0) * angle) cos * radius;
+			startPosBottom := ((PI / 180.0) * angle) sin * -radius;
+			runTimer!Start;
+			par
+				MoveToPosition(0x00, startPosTop)()
+			and
+				MoveToPosition(0x01, startPosBottom)()
+			rap;
+			runTimer!Stop;
+			PolarAngle := angle;
+			PolarRadius := radius;
+			PolarSet := true
+		fi fi fi fi
+	
+	Orbit(angularVelocity, rotationCount : Real)() | angle, angleStep : Real |
+		if InitialisingTop then ui!Error("Top axis is initialising")
+		else if InitialisingBottom then ui!Error("Bottom axis is initialising")
+		else if !InitialisedTop then ui!Error("Top axis not yet initialised")
+		else if !InitialisedBottom then ui!Error("Bottom axis not yet initialised")
+		else if MovingTop then ui!Error("Top axis is already moving")
+		else if MovingBottom then ui!Error("Bottom axis is already moving")
+		else if !PolarSet then ui!Error("Polar settings have not been set")
+		else
+			ui!Ok;
+			MovingTop := true;
+			MovingBottom := true;
+			angle := PolarAngle;
+			angleStep := angularVelocity / 200.0;
+			orbitTimer!Start;
+			while angle <= PolarAngle + (rotationCount * 360.0) do
+				topSetpoint := ((PI / 180.0) * angle) cos * PolarRadius;
+				bottomSetpoint := ((PI / 180.0) * angle) sin * -PolarRadius;
+				angle := angle + angleStep;
+				orbitTimer?Tick
+			od;
+			orbitTimer!Stop;
+			MovingTop := false;
+			MovingBottom := false
+		fi fi fi fi fi fi fi
+	
+	Stop()()
+		topSetpoint := topPosition;
+		bottomSetpoint := bottomSetpoint;
+		WaitForPosition()();
+		MovingTop := false;
+		MovingBottom := false;
+		runTimer!Stop;
+		orbitTimer!Stop
+	
+	Status()()
+		statusTimer?Tick;
+		ui!StateInfo(new(StateInfo) set(2, new(Sequence) 
+			append(new(AxisInfo) set(0x00, MovingTop, InitialisedTop, topPosition)) 
+			append(new(AxisInfo) set(0x01, MovingBottom, InitialisedBottom, bottomPosition))));
+		Status()()
+	
+	WaitForPosition()()
+		par
+			WaitForPosition(0x00)()
+		and
+			WaitForPosition(0x01)()
+		rap
+	
+	WaitForPosition(axis : Integer)()
+		sel
+			[axis = 0x00]
+			[(topSetpoint >= (topPosition - error)) & (topSetpoint <= (topPosition + error))]
+			skip
+		or
+			[axis = 0x01]
+			[(bottomSetpoint >= (bottomPosition - error)) & (bottomSetpoint <= bottomPosition + error)]
+			skip
+		les
+	
+	Monitor()()
+		runTimer?Tick;
+		Monitor()()

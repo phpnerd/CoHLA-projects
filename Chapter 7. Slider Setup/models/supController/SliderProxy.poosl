@@ -1,0 +1,102 @@
+import "lib/interface.poosl"
+
+process class SliderProxy
+ports
+	ui
+	sliders
+messages
+	ui?request(Request)
+	ui!response(Response)
+	ui!event(Event)
+	
+	sliders!Initialise(Integer, Sequence)
+	sliders!MoveToPosition(Integer, Sequence)
+	sliders!Stop
+	sliders!MoveToPolar(Real, Real)
+	sliders!Orbit(Real, Real)
+	sliders!GetMovementSpeed
+	sliders!SetMovementSpeed(Real)
+	sliders!GetStatusInterval
+	sliders!SetStatusInterval(Real)
+	sliders?Ok
+	sliders?Ok(Object)
+	sliders?Error
+	sliders?Error(Object)
+	sliders?Initialised
+	sliders?StateInfo(StateInfo)
+variables
+init
+	Init()()
+methods
+	Init()()
+		par In()() and Out()() rap
+	
+	In()() | request : Request |
+		ui?request(request);
+		sel
+			[request getCommand = 0x00]
+			sliders!Initialise(request getParameters getNrOfAxes, request getParameters getAxes)
+		or
+			[request getCommand = 0x01]
+			sliders!MoveToPosition(request getParameters getNrOfAxes, request getParameters getAxisPositionInfo)
+		or
+			[request getCommand = 0x02]
+			sliders!Stop
+		or
+			[request getCommand = 0x03]
+			sliders!MoveToPolar(request getParameters getAngle, request getParameters getRadius)
+		or
+			[request getCommand = 0x04]
+			sliders!Orbit(request getParameters getAngularVelocity, request getParameters getRotationCount)
+		or
+			[request getCommand = 0x60]
+			sliders!GetMovementSpeed
+		or
+			[request getCommand = 0x61]
+			sliders!SetMovementSpeed(request getParameters getSpeed)
+		or
+			[request getCommand = 0x70]
+			sliders!GetStatusInterval
+		or
+			[request getCommand = 0x71]
+			sliders!SetStatusInterval(request getParameters getInterval)
+		les;
+		par In()() and HandleResponse(request getCommand)() rap
+	
+	Out()() | si : StateInfo |
+		sel
+			sliders?Initialised;
+			Event(0x00)()
+		or
+			sliders?StateInfo(si);
+			Event(0x01, si)()
+		les;
+		Out()()
+	
+	HandleResponse(cmd : Integer)() | o : Object |
+		sel
+			sliders?Ok;
+			Response(cmd, 0x00)()
+		or
+			sliders?Ok(o);
+			Response(cmd, 0x00, o)()
+		or
+			sliders?Error;
+			Response(cmd, 0x01)()
+		or
+			sliders?Error(o);
+			Response(cmd, 0x01, o)()
+		les
+	
+	Response(cmd, result : Integer)()
+		Response(cmd, result, nil)()
+	Response(cmd, result : Integer, o : Object)()
+		if o isOfType("String") then
+			ui!response(new(Response) set(cmd, result, new(ResultMessage) set(o)))
+		else
+			ui!response(new(Response) set(cmd, result, o))
+		fi
+	Event(id : Integer)()
+		Event(id, nil)()
+	Event(id : Integer, o : Object)()
+		ui!event(new(Event) set(id, o))

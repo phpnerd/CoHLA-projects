@@ -1,0 +1,21 @@
+import "SliderProxy.poosl"
+import "Timer.poosl"
+import "supervisoryControl.poosl"
+import "UIConnector.poosl"
+
+system
+instances
+	sliderProxy : SliderProxy()
+	runTimer : Timer(interval := 5.0e-2)
+	orbitTimer : Timer(interval := 5.0e-2)
+	statusTimer : Timer(interval := 0.5)
+	supervisoryController : SupervisoryController(speed := 0.04, error := 0.005)
+	uiConnector : UIConnector(port := 9999)
+	
+channels
+	{ supervisoryController.runTimer, runTimer.ps }
+	{ supervisoryController.statusTimer, statusTimer.ps }
+	{ supervisoryController.orbitTimer, orbitTimer.ps }
+	
+	{ uiConnector.sliders, sliderProxy.ui }
+	{ sliderProxy.sliders, supervisoryController.ui }

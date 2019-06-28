@@ -1,0 +1,58 @@
+import "lib/interface.poosl"
+import "lib/json.poosl"
+
+process class UIConnector(port : Integer)
+ports
+	sliders
+messages
+	sliders!request(Request)
+	sliders?response(Response)
+	sliders?event(Event)
+variables
+	JSON : JSON
+	sock : Socket
+init
+	Init()()
+methods
+	Init()()
+		JSON := new(JSON);
+		sock := new(Socket);
+		par Connect()() and Read()() and Write()() rap
+	
+	Connect()()
+		sock acceptFrom(port);
+		[sock isConnected]
+		KeepAlive()()
+	
+	Read()() | jsonStr : String, json : Map, message : Message |
+		[sock hasLine]
+		jsonStr := sock readLine;
+		json := JSON parse(jsonStr);
+		message := new(Message) fromMap(json);
+		if message getMessageType = 0x00 then
+			sliders!request(message getData)
+		fi;
+		Read()()
+	
+	Write()() | response : Response, event : Event, message : Message, jsonStr : String |
+		message := new(Message);
+		sel
+			sliders?response(response);
+			message := message set(0x01, response)
+		or
+			sliders?event(event);
+			message := message set(0x02, event)
+		les;
+		jsonStr := JSON convert(message toMap);
+		sel
+			[sock isConnected]
+			sock writeLine(jsonStr)
+		or
+			[!(sock isConnected)]
+			skip
+		les;
+		Write()()
+	
+	KeepAlive()()
+		delay 0.1;
+		KeepAlive()()

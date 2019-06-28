@@ -1,0 +1,644 @@
+import "structures.poosl"
+import "json.poosl"
+
+data class Message extends Object
+variables
+    MessageType : Integer
+    Data : Object
+methods
+    getMessageType : Integer
+        return MessageType
+    setMessageType(MessageType_ : Integer) : Message
+        MessageType := MessageType_;
+        return self
+    getData : Object
+        return Data
+    setData(Data_ : Object) : Message
+        Data := Data_;
+        return self
+    
+    set(MessageType_ : Integer, Data_ : Object) : Message
+        MessageType := MessageType_;
+        Data := Data_;
+        return self
+    
+    fromMap(json : Map) : Message | MessageType_ : Integer, Data_ : Object |
+        MessageType_ := json at("message_type");
+        Data_ := nil;
+        if MessageType_ = 0x00 then
+            Data_ := new(Request) fromMap(json at("data"))
+        fi;
+        if MessageType_ = 0x01 then
+            Data_ := new(Response) fromMap(json at("data"))
+        fi;
+        if MessageType_ = 0x02 then
+            Data_ := new(Event) fromMap(json at("data"))
+        fi;
+        return self set(MessageType_, Data_)
+    
+    toMap : Map | json : Map, MessageType_ : Integer, Data_ : Map |
+        json := new(Map);
+        MessageType_ := MessageType;
+        if Data = nil then
+            Data_ := nil
+        else
+            if MessageType_ = 0x00 then
+                Data_ := Data toMap
+            fi;
+            if MessageType_ = 0x01 then
+                Data_ := Data toMap
+            fi;
+            if MessageType_ = 0x02 then
+                Data_ := Data toMap
+            fi
+        fi;
+        json putAt("message_type", MessageType_) putAt("data", Data_);
+        return json
+    
+    printString : String
+        return self toMap printString
+
+
+data class Request extends Object
+variables
+    Command : Integer
+    Parameters : Object
+methods
+    getCommand : Integer
+        return Command
+    setCommand(Command_ : Integer) : Request
+        Command := Command_;
+        return self
+    getParameters : Object
+        return Parameters
+    setParameters(Parameters_ : Object) : Request
+        Parameters := Parameters_;
+        return self
+    
+    set(Command_ : Integer, Parameters_ : Object) : Request
+        Command := Command_;
+        Parameters := Parameters_;
+        return self
+    
+    fromMap(json : Map) : Request | Command_ : Integer, Parameters_ : Object |
+        Command_ := json at("command");
+        Parameters_ := nil;
+        if Command_ = 0x00 then
+            Parameters_ := new(InitInfo) fromMap(json at("parameters"))
+        fi;
+        if Command_ = 0x01 then
+            Parameters_ := new(PositionInfo) fromMap(json at("parameters"))
+        fi;
+        if Command_ = 0x02 then
+            Parameters_ := nil
+        fi;
+        if Command_ = 0x03 then
+            Parameters_ := new(PolarInfo) fromMap(json at("parameters"))
+        fi;
+        if Command_ = 0x04 then
+            Parameters_ := new(OrbitInfo) fromMap(json at("parameters"))
+        fi;
+        if Command_ = 0x60 then
+            Parameters_ := nil
+        fi;
+        if Command_ = 0x61 then
+            Parameters_ := new(MovementSpeedInfo) fromMap(json at("parameters"))
+        fi;
+        if Command_ = 0x70 then
+            Parameters_ := nil
+        fi;
+        if Command_ = 0x71 then
+            Parameters_ := new(StatusInterval) fromMap(json at("parameters"))
+        fi;
+        return self set(Command_, Parameters_)
+    
+    toMap : Map | json : Map, Command_ : Integer, Parameters_ : Map |
+        json := new(Map);
+        Command_ := Command;
+        if Parameters = nil then
+            Parameters_ := nil
+        else
+            if Command_ = 0x00 then
+                Parameters_ := Parameters toMap
+            fi;
+            if Command_ = 0x01 then
+                Parameters_ := Parameters toMap
+            fi;
+            if Command_ = 0x02 then
+                Parameters_ := nil
+            fi;
+            if Command_ = 0x03 then
+                Parameters_ := Parameters toMap
+            fi;
+            if Command_ = 0x04 then
+                Parameters_ := Parameters toMap
+            fi;
+            if Command_ = 0x60 then
+                Parameters_ := nil
+            fi;
+            if Command_ = 0x61 then
+                Parameters_ := Parameters toMap
+            fi;
+            if Command_ = 0x70 then
+                Parameters_ := nil
+            fi;
+            if Command_ = 0x71 then
+                Parameters_ := Parameters toMap
+            fi
+        fi;
+        json putAt("command", Command_) putAt("parameters", Parameters_);
+        return json
+    
+    printString : String
+        return self toMap printString
+
+
+data class Response extends Object
+variables
+    Command : Integer
+    Result : Integer
+    Data : Object
+methods
+    getCommand : Integer
+        return Command
+    setCommand(Command_ : Integer) : Response
+        Command := Command_;
+        return self
+    getResult : Integer
+        return Result
+    setResult(Result_ : Integer) : Response
+        Result := Result_;
+        return self
+    getData : Object
+        return Data
+    setData(Data_ : Object) : Response
+        Data := Data_;
+        return self
+    
+    set(Command_ : Integer, Result_ : Integer, Data_ : Object) : Response
+        Command := Command_;
+        Result := Result_;
+        Data := Data_;
+        return self
+    
+    fromMap(json : Map) : Response | Command_ : Integer, Result_ : Integer, Data_ : Object |
+        Command_ := json at("command");
+        Result_ := json at("result");
+        Data_ := nil;
+        if Result_ = 0x00 then
+            if Command_ = 0x60 then
+                Data_ := new(MovementSpeedInfo) fromMap(json at("data"))
+            fi;
+            if Command_ = 0x70 then
+                Data_ := new(StatusInterval) fromMap(json at("data"))
+            fi
+        fi;
+        if Result_ = 0x01 then
+            Data_ := new(ResultMessage) fromMap(json at("data"))
+        fi;
+        return self set(Command_, Result_, Data_)
+    
+    toMap : Map | json : Map, Command_ : Integer, Result_ : Integer, Data_ : Map |
+        json := new(Map);
+        Command_ := Command;
+        Result_ := Result;
+        if Data = nil then
+            Data_ := nil
+        else
+            if Result_ = 0x00 then
+                if Command_ = 0x60 then
+                    Data_ := Data toMap
+                fi;
+                if Command_ = 0x70 then
+                    Data_ := Data toMap
+                fi
+            fi;
+            if Result_ = 0x01 then
+                Data_ := Data toMap
+            fi
+        fi;
+        json putAt("command", Command_) putAt("result", Result_) putAt("data", Data_);
+        return json
+    
+    printString : String
+        return self toMap printString
+
+
+data class Event extends Object
+variables
+    EventType : Integer
+    Data : Object
+methods
+    getEventType : Integer
+        return EventType
+    setEventType(EventType_ : Integer) : Event
+        EventType := EventType_;
+        return self
+    getData : Object
+        return Data
+    setData(Data_ : Object) : Event
+        Data := Data_;
+        return self
+    
+    set(EventType_ : Integer, Data_ : Object) : Event
+        EventType := EventType_;
+        Data := Data_;
+        return self
+    
+    fromMap(json : Map) : Event | EventType_ : Integer, Data_ : Object |
+        EventType_ := json at("event_type");
+        Data_ := nil;
+        if EventType_ = 0x00 then
+            Data_ := nil
+        fi;
+        if EventType_ = 0x01 then
+            Data_ := new(StateInfo) fromMap(json at("data"))
+        fi;
+        return self set(EventType_, Data_)
+    
+    toMap : Map | json : Map, EventType_ : Integer, Data_ : Map |
+        json := new(Map);
+        EventType_ := EventType;
+        if Data = nil then
+            Data_ := nil
+        else
+            if EventType_ = 0x00 then
+                Data_ := nil
+            fi;
+            if EventType_ = 0x01 then
+                Data_ := Data toMap
+            fi
+        fi;
+        json putAt("event_type", EventType_) putAt("data", Data_);
+        return json
+    
+    printString : String
+        return self toMap printString
+
+
+data class InitInfo extends Object
+variables
+    NrOfAxes : Integer
+    Axes : Sequence
+methods
+    getNrOfAxes : Integer
+        return NrOfAxes
+    setNrOfAxes(NrOfAxes_ : Integer) : InitInfo
+        NrOfAxes := NrOfAxes_;
+        return self
+    getAxes : Sequence
+        return Axes
+    setAxes(Axes_ : Sequence) : InitInfo
+        Axes := Axes_;
+        return self
+    
+    set(NrOfAxes_ : Integer, Axes_ : Sequence) : InitInfo
+        NrOfAxes := NrOfAxes_;
+        Axes := Axes_;
+        return self
+    
+    fromMap(json : Map) : InitInfo | AxesList : Sequence, i : Integer, NrOfAxes_ : Integer |
+        NrOfAxes_ := json at("nr_of_axes");
+        AxesList := new(Sequence) fromArray(json at("axes"));
+        return self set(NrOfAxes_, AxesList)
+    
+    toMap : Map | json : Map, NrOfAxes_ : Integer, Axes_ : Array, i : Integer |
+        json := new(Map);
+        NrOfAxes_ := NrOfAxes;
+        Axes_ := Axes toArray;
+        json putAt("nr_of_axes", NrOfAxes_) putAt("axes", Axes_);
+        return json
+    
+    printString : String
+        return self toMap printString
+
+
+data class StateInfo extends Object
+variables
+    NrOfAxes : Integer
+    Axes : Sequence
+methods
+    getNrOfAxes : Integer
+        return NrOfAxes
+    setNrOfAxes(NrOfAxes_ : Integer) : StateInfo
+        NrOfAxes := NrOfAxes_;
+        return self
+    getAxes : Sequence
+        return Axes
+    setAxes(Axes_ : Sequence) : StateInfo
+        Axes := Axes_;
+        return self
+    
+    set(NrOfAxes_ : Integer, Axes_ : Sequence) : StateInfo
+        NrOfAxes := NrOfAxes_;
+        Axes := Axes_;
+        return self
+    
+    fromMap(json : Map) : StateInfo | AxesList : Sequence, i : Integer, NrOfAxes_ : Integer |
+        NrOfAxes_ := json at("nr_of_axes");
+        AxesList := new(Sequence);
+        i := 1;
+        while i <= NrOfAxes_ do
+            AxesList append(new(AxisInfo) fromMap(json at("axes") at(i)));
+            i := i + 1
+        od;
+        return self set(NrOfAxes_, AxesList)
+    
+    toMap : Map | json : Map, NrOfAxes_ : Integer, Axes_ : Array, i : Integer |
+        json := new(Map);
+        NrOfAxes_ := NrOfAxes;
+        Axes_ := new(Array) resize(Axes size);
+        i := 1;
+        while i <= Axes_ size do
+            Axes_ putAt(i, Axes at(i) toMap);
+            i := i + 1
+        od;
+        json putAt("nr_of_axes", NrOfAxes_) putAt("axes", Axes_);
+        return json
+    
+    printString : String
+        return self toMap printString
+
+
+data class AxisInfo extends Object
+variables
+    Axis : Integer
+    Moving : Boolean
+    Initialised : Boolean
+    Position : Real
+methods
+    getAxis : Integer
+        return Axis
+    setAxis(Axis_ : Integer) : AxisInfo
+        Axis := Axis_;
+        return self
+    getMoving : Boolean
+        return Moving
+    setMoving(Moving_ : Boolean) : AxisInfo
+        Moving := Moving_;
+        return self
+    getInitialised : Boolean
+        return Initialised
+    setInitialised(Initialised_ : Boolean) : AxisInfo
+        Initialised := Initialised_;
+        return self
+    getPosition : Real
+        return Position
+    setPosition(Position_ : Real) : AxisInfo
+        Position := Position_;
+        return self
+    
+    set(Axis_ : Integer, Moving_ : Boolean, Initialised_ : Boolean, Position_ : Real) : AxisInfo
+        Axis := Axis_;
+        Moving := Moving_;
+        Initialised := Initialised_;
+        Position := Position_;
+        return self
+    
+    fromMap(json : Map) : AxisInfo
+        return self set(json at("axis"), json at("moving"), json at("initialised"), json at("position"))
+    
+    toMap : Map | json : Map, Axis_ : Integer, Moving_ : Boolean, Initialised_ : Boolean, Position_ : Real |
+        json := new(Map);
+        Axis_ := Axis;
+        Moving_ := Moving;
+        Initialised_ := Initialised;
+        Position_ := Position;
+        json putAt("axis", Axis_) putAt("moving", Moving_) putAt("initialised", Initialised_) putAt("position", Position_);
+        return json
+    
+    printString : String
+        return self toMap printString
+
+
+data class PositionInfo extends Object
+variables
+    NrOfAxes : Integer
+    AxisPositionInfo : Sequence
+methods
+    getNrOfAxes : Integer
+        return NrOfAxes
+    setNrOfAxes(NrOfAxes_ : Integer) : PositionInfo
+        NrOfAxes := NrOfAxes_;
+        return self
+    getAxisPositionInfo : Sequence
+        return AxisPositionInfo
+    setAxisPositionInfo(AxisPositionInfo_ : Sequence) : PositionInfo
+        AxisPositionInfo := AxisPositionInfo_;
+        return self
+    
+    set(NrOfAxes_ : Integer, AxisPositionInfo_ : Sequence) : PositionInfo
+        NrOfAxes := NrOfAxes_;
+        AxisPositionInfo := AxisPositionInfo_;
+        return self
+    
+    fromMap(json : Map) : PositionInfo | AxisPositionInfoList : Sequence, i : Integer, NrOfAxes_ : Integer |
+        NrOfAxes_ := json at("nr_of_axes");
+        AxisPositionInfoList := new(Sequence);
+        i := 1;
+        while i <= NrOfAxes_ do
+            AxisPositionInfoList append(new(AxisPositionInfo) fromMap(json at("axis_position_info") at(i)));
+            i := i + 1
+        od;
+        return self set(NrOfAxes_, AxisPositionInfoList)
+    
+    toMap : Map | json : Map, NrOfAxes_ : Integer, AxisPositionInfo_ : Array, i : Integer |
+        json := new(Map);
+        NrOfAxes_ := NrOfAxes;
+        AxisPositionInfo_ := new(Array) resize(AxisPositionInfo size);
+        i := 1;
+        while i <= AxisPositionInfo_ size do
+            AxisPositionInfo_ putAt(i, AxisPositionInfo at(i) toMap);
+            i := i + 1
+        od;
+        json putAt("nr_of_axes", NrOfAxes_) putAt("axis_position_info", AxisPositionInfo_);
+        return json
+    
+    printString : String
+        return self toMap printString
+
+
+data class AxisPositionInfo extends Object
+variables
+    Axis : Integer
+    Position : Real
+methods
+    getAxis : Integer
+        return Axis
+    setAxis(Axis_ : Integer) : AxisPositionInfo
+        Axis := Axis_;
+        return self
+    getPosition : Real
+        return Position
+    setPosition(Position_ : Real) : AxisPositionInfo
+        Position := Position_;
+        return self
+    
+    set(Axis_ : Integer, Position_ : Real) : AxisPositionInfo
+        Axis := Axis_;
+        Position := Position_;
+        return self
+    
+    fromMap(json : Map) : AxisPositionInfo
+        return self set(json at("axis"), json at("position"))
+    
+    toMap : Map | json : Map, Axis_ : Integer, Position_ : Real |
+        json := new(Map);
+        Axis_ := Axis;
+        Position_ := Position;
+        json putAt("axis", Axis_) putAt("position", Position_);
+        return json
+    
+    printString : String
+        return self toMap printString
+
+
+data class ResultMessage extends Object
+variables
+    Message : String
+methods
+    getMessage : String
+        return Message
+    setMessage(Message_ : String) : ResultMessage
+        Message := Message_;
+        return self
+    
+    set(Message_ : String) : ResultMessage
+        Message := Message_;
+        return self
+    
+    fromMap(json : Map) : ResultMessage
+        return self set(json at("message"))
+    
+    toMap : Map | json : Map, Message_ : String |
+        json := new(Map);
+        Message_ := Message;
+        json putAt("message", Message_);
+        return json
+    
+    printString : String
+        return self toMap printString
+
+
+data class PolarInfo extends Object
+variables
+    Angle : Real
+    Radius : Real
+methods
+    getAngle : Real
+        return Angle
+    setAngle(Angle_ : Real) : PolarInfo
+        Angle := Angle_;
+        return self
+    getRadius : Real
+        return Radius
+    setRadius(Radius_ : Real) : PolarInfo
+        Radius := Radius_;
+        return self
+    
+    set(Angle_ : Real, Radius_ : Real) : PolarInfo
+        Angle := Angle_;
+        Radius := Radius_;
+        return self
+    
+    fromMap(json : Map) : PolarInfo
+        return self set(json at("angle"), json at("radius"))
+    
+    toMap : Map | json : Map, Angle_ : Real, Radius_ : Real |
+        json := new(Map);
+        Angle_ := Angle;
+        Radius_ := Radius;
+        json putAt("angle", Angle_) putAt("radius", Radius_);
+        return json
+    
+    printString : String
+        return self toMap printString
+
+
+data class OrbitInfo extends Object
+variables
+    AngularVelocity : Real
+    RotationCount : Real
+methods
+    getAngularVelocity : Real
+        return AngularVelocity
+    setAngularVelocity(AngularVelocity_ : Real) : OrbitInfo
+        AngularVelocity := AngularVelocity_;
+        return self
+    getRotationCount : Real
+        return RotationCount
+    setRotationCount(RotationCount_ : Real) : OrbitInfo
+        RotationCount := RotationCount_;
+        return self
+    
+    set(AngularVelocity_ : Real, RotationCount_ : Real) : OrbitInfo
+        AngularVelocity := AngularVelocity_;
+        RotationCount := RotationCount_;
+        return self
+    
+    fromMap(json : Map) : OrbitInfo
+        return self set(json at("angular_velocity"), json at("rotation_count"))
+    
+    toMap : Map | json : Map, AngularVelocity_ : Real, RotationCount_ : Real |
+        json := new(Map);
+        AngularVelocity_ := AngularVelocity;
+        RotationCount_ := RotationCount;
+        json putAt("angular_velocity", AngularVelocity_) putAt("rotation_count", RotationCount_);
+        return json
+    
+    printString : String
+        return self toMap printString
+
+
+data class MovementSpeedInfo extends Object
+variables
+    Speed : Real
+methods
+    getSpeed : Real
+        return Speed
+    setSpeed(Speed_ : Real) : MovementSpeedInfo
+        Speed := Speed_;
+        return self
+    
+    set(Speed_ : Real) : MovementSpeedInfo
+        Speed := Speed_;
+        return self
+    
+    fromMap(json : Map) : MovementSpeedInfo
+        return self set(json at("speed"))
+    
+    toMap : Map | json : Map, Speed_ : Real |
+        json := new(Map);
+        Speed_ := Speed;
+        json putAt("speed", Speed_);
+        return json
+    
+    printString : String
+        return self toMap printString
+
+
+data class StatusInterval extends Object
+variables
+    Interval : Real
+methods
+    getInterval : Real
+        return Interval
+    setInterval(Interval_ : Real) : StatusInterval
+        Interval := Interval_;
+        return self
+    
+    set(Interval_ : Real) : StatusInterval
+        Interval := Interval_;
+        return self
+    
+    fromMap(json : Map) : StatusInterval
+        return self set(json at("interval"))
+    
+    toMap : Map | json : Map, Interval_ : Real |
+        json := new(Map);
+        Interval_ := Interval;
+        json putAt("interval", Interval_);
+        return json
+    
+    printString : String
+        return self toMap printString
