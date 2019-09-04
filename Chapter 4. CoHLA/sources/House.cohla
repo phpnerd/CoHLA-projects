@@ -46,6 +46,12 @@ FederateClass Logger {
   }
 }
 
+FederateClass LongLogger {
+  Type CSV-logger {
+    DefaultMeasureTime 86400.0
+  }
+}
+
 Configuration Large for Room {
   Surface = "45.0"
   WindowSize = "11"
@@ -88,5 +94,41 @@ Federation House {
     Apply Large to Livingroom
     Apply Medium to Kitchen
     Apply Small to Hall
+  }
+  Situation DefaultBase {
+    Apply Large to Livingroom
+    Apply Medium to Kitchen
+    Apply Small to Hall
+    Init Thermostat.targetTemperature as "14.0"
+  }
+  Scenario RegularDay {
+    AutoStop: 86400.0
+    0.0: Thermostat.targetTemperature = "14.0"      // 00:00
+    21600.0: Thermostat.targetTemperature = "18.5"  // 06:00
+    25200.0: Thermostat.targetTemperature = "16.0"  // 07:00
+    57600.0: Thermostat.targetTemperature = "19.5"  // 16:00
+    64800.0: Thermostat.targetTemperature = "20.0"  // 18:00
+    72000.0: Thermostat.targetTemperature = "20.5"  // 20:00
+    81000.0: Thermostat.targetTemperature = "14.0"  // 22:30
+  }
+  FaultScenario BrokenCables {
+    Variance for Livingroom.temperature = 0.03
+    From 300.0 to 480.0 set Thermostat.heaterState = "false"
+    From 1500.0 to 2100.0 disconnect Livingroom.temperature
+    From 2700.0 disconnect Thermostat.heaterState
+  }
+  DSE HeaterSizes {
+    SweepMode Independent
+    Scenario RegularDay
+    Situations: ComfyBase
+    Set Livingroom.RadiatorSize:  0.5, 0.75, 1.0
+    Set Kitchen.RadiatorSize:     0.1, 0.25, 0.4
+    Set Hall.RadiatorSize:        0.1, 0.125, 0.15
+  }
+  MetricSet ErrorAndOnTime {
+    MeasureTime: 86400.0
+    Metric errLivingroom as Error Livingroom.temperature relative to Thermostat.targetTemperature
+    Metric errKitchen as Error Kitchen.temperature relative to Thermostat.targetTemperature
+    Metric errHall as Error Hall.temperature relative to Thermostat.targetTemperature
   }
 }
