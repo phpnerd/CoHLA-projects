@@ -20,7 +20,28 @@ FederateClass Room {
   DefaultLookahead 0.1
 }
 
-FederateClass Thermostat { 
+FederateClass ThermostatPOOSL {
+  Type POOSL {
+    Processes {
+      Thermostat in "thermostat"
+    }
+  }
+  Attributes {
+    InOutput Real targetTemperature in Thermostat as "targetTemperature"
+    InOutput Real temperature in Thermostat as "temperature"
+    Output Boolean heaterState in Thermostat as "heaterState"
+  }
+  Parameters {
+    Real targetTemperature "initTarget" in Thermostat
+    Boolean heaterState "heaterState" in Thermostat
+  }
+  TimePolicy RegulatedAndConstrained
+  DefaultModel "../../StandaloneThermostat.poosl"
+  AdvanceType TimeAdvanceRequest
+  DefaultLookahead 0.1
+}
+
+FederateClass ThermostatFMU { 
   Type FMU
   Attributes { 
     Output Boolean heaterState
@@ -34,6 +55,7 @@ FederateClass Thermostat {
   }
   TimePolicy RegulatedAndConstrained
   DefaultModel "../../Thermostat_20sim.fmu"
+//  DefaultModel "../../Thermostat_VDM.fmu"
   AdvanceType TimeAdvanceRequest
   DefaultStepSize 30.0
   DefaultLookahead 0.1
@@ -53,7 +75,8 @@ Configuration Large for Room {
 
 Federation House {
   Instances {
-    Thermostat : Thermostat
+    Thermostat : ThermostatFMU
+//    Thermostat : ThermostatPOOSL
     Livingroom : Room
     log : Logger
   }
